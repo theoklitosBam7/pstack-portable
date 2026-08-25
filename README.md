@@ -6,17 +6,17 @@ i'm [poteto](https://x.com/poteto). i'm not a president or ceo, but i've worked 
 
 there's a growing sense that ai writes too much slop code. i agree. i don't want to ship like a team of twenty slop artists. throughput without quality is not a goal i aspire to. if you want to go fast, go deep first. 
 
-**pstack is my answer.** these are the same skills i use everyday to ship high quality code at Cursor. this turns cursor into a real engineering team. the goal is not to maximize loc, in fact it's the opposite. pstack helps you write less, but higher quality code.
+**pstack is my answer.** these are the same skills i use everyday to ship high quality code at Cursor. they turn your agent into a real engineering team. the goal is not to maximize loc, in fact it's the opposite. pstack helps you write less, but higher quality code.
 
-**pstack gives you fearless parallelism.** when you can go deep on one agent and trust it to write good, verifiable code, you can truly parallelize with confidence. start multiple agents up with `poteto-mode` and trust that they'll apply rigorous engineering principles to their work.
+**pstack gives you fearless parallelism.** when you can go deep on one agent and trust it to write good, verifiable code, you can parallelize with confidence. start multiple agents up with `poteto-mode` and trust that they'll apply rigorous engineering principles to their work.
 
-**cursor gives you the best of all worlds.** every frontier model has its strengths and weaknesses. use any model with pstack. in fact, many of my skills use multi-model workflows to take advantage of each model's unique strengths.
+**use any model.** every frontier model has strengths and weaknesses. many of my skills run multi-model workflows to take advantage of those differences.
 
 fork it. improve it. make it yours. PRs are welcome! 
 
 ## install
 
-any agent tool (claude code, codex, gemini cli, opencode, amp, pi, goose, droid, crush): the skills are harness agnostic. put this repo somewhere stable and symlink the skills into the shared `.agents` directory, which all of them read:
+the skills are harness agnostic and run on claude code, codex, gemini cli, opencode, amp, pi, goose, droid, and crush. put this repo somewhere stable and symlink the skills into the shared `.agents` directory, which all of them read:
 
 ```bash
 ln -sfn /path/to/pstack-portable/skills/* ~/.agents/skills/
@@ -100,8 +100,6 @@ morning.
 
 </details>
 
-
-
 when invoked it:
 
 1. opens a todo list. the first item is reading the inline principles index in the skill.
@@ -113,7 +111,7 @@ the full rules and playbooks live in [`skills/poteto-mode/SKILL.md`](./skills/po
 
 [`/poteto-mode`](./skills/poteto-mode/SKILL.md) is also a sticky mode: once entered it stays on across turns, applying itself when a playbook matches or the task needs rigor and staying out of the way otherwise. opt out any time by saying so.
 
-[`/poteto-mode`](./skills/poteto-mode/SKILL.md) works extremely well with cursor's `/loop` command. you can make cursor work for many hours without sacrificing rigor.
+[`/poteto-mode`](./skills/poteto-mode/SKILL.md) pairs with your harness's loop or wake mechanism when it has one. on cursor that's the `/loop` command, and you can make it work for many hours without sacrificing rigor.
 
 ## skills
 
@@ -144,7 +142,7 @@ the full rules and playbooks live in [`skills/poteto-mode/SKILL.md`](./skills/po
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/setup-pstack`](./skills/setup-pstack/SKILL.md) | you want to pick which models pstack uses per role. detects your models and writes a config rule. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
-| [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not just have it summarized. runs how + why and weaves one plain explanation, built up diagram by diagram. |
+| [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not a summary of it. runs how + why and weaves one plain explanation, built up diagram by diagram. |
 | [`/tdd`](./skills/tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
 | [`/no-comments`](./skills/no-comments/SKILL.md) | strip comments before review; spawns Comment Sicko, fixes accepted findings, offers encodings for claimed constraints. |
 | [`/typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
@@ -158,12 +156,9 @@ the full rules and playbooks live in [`skills/poteto-mode/SKILL.md`](./skills/po
 
 </details>
 
-
-
 ### examples
 
 mostly i type [`/poteto-mode`](./skills/poteto-mode/SKILL.md) at the start of a task and let it route to a playbook. the other skills fire as the steps need them. a few i reach for directly.
-
 
 <details>
 <summary>all the examples</summary>
@@ -258,7 +253,7 @@ install `cursor-team-kit` alongside pstack if you want the full set.
 
 ## why are there no planning skills?
 
-cursor already has a great plan mode which works great with pstack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/poteto-mode`](./skills/poteto-mode/SKILL.md) covers it, but it's not a default. 
+cursor already has a good plan mode that works well with pstack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/poteto-mode`](./skills/poteto-mode/SKILL.md) covers it, but it's not a default. 
 
 ## make it yours
 
