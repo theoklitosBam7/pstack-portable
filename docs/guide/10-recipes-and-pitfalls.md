@@ -2,7 +2,7 @@
 
 Prompts worth copying, then the mistakes everyone makes once. Swap in your own paths and finish conditions. The recipes are deliberately informal. That's how they get typed in practice, and the skills read intent fine.
 
-![She tastes a finished dish while robots cook from a recipe box, with pinned cards reading /how, /tdd, and /loop above the counter.](./images/recipes.jpg)
+![She tastes a finished dish while robots cook from a recipe box, with pinned cards reading /how, /pstack-tdd, and /loop above the counter.](./images/recipes.jpg)
 
 ## Understand an unfamiliar subsystem
 
@@ -39,7 +39,7 @@ The qualifiers do real work. "don't change anything yet" keeps it read-only, and
 ## Fix a bug through a failing test
 
 ```text
-/poteto-mode repro the duplicate write first. if there's a cheap test path, /tdd it. then fix and rerun.
+/poteto-mode repro the duplicate write first. if there's a cheap test path, /pstack-tdd it. then fix and rerun.
 ```
 
 "if there's a cheap test path" matters. Forcing a test through brittle mocks proves less than running the real command, and the playbook is allowed to say so.

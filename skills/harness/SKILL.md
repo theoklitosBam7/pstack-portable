@@ -59,4 +59,8 @@ Cursor installs the plugin as usual with `/add-plugin pstack`. Every other harne
 mkdir -p ~/.agents/skills && ln -sfn "$PWD"/skills/* ~/.agents/skills/
 ```
 
+If `ln` fails with `Operation not permitted`, the shared directory already holds a real directory of that name from another skills provider. `ln` replaces symlinks but never directories, so move or remove that copy first.
+
+The `$PWD` prefix matters: `ln` stores the source text verbatim as the link's target, so a relative source such as plain `skills/*` resolves against the link's own directory, not yours, and ends up dangling. Only absolute operands produce working symlinks.
+
 Keep the checkout intact. Skills reference their own files and sibling skills by relative path, so the symlinks must point into this tree rather than copying files out of it. `AGENTS.md` at the repo root of the target project is the always-on surface on every non-Cursor harness; add a line there naming pstack when you want its conventions applied every session.

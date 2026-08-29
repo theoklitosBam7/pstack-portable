@@ -19,8 +19,12 @@ fork it. improve it. make it yours. PRs are welcome!
 the skills are harness agnostic and run on claude code, codex, gemini cli, opencode, amp, pi, goose, droid, and crush. put this repo somewhere stable and symlink the skills into the shared `.agents` directory, which all of them read:
 
 ```bash
-ln -sfn /path/to/pstack-portable/skills/* ~/.agents/skills/
+mkdir -p ~/.agents/skills && ln -sfn /path/to/pstack-portable/skills/* ~/.agents/skills/
 ```
+
+if ln fails with `operation not permitted`, `~/.agents/skills` already holds a real directory of that name from another skills provider. ln replaces symlinks but never directories, so move or remove that copy first.
+
+the source path has to be absolute. ln stores the source text as-is as the link's target, so a relative source like `skills/*` resolves against the link's own directory and ends up dangling.
 
 keep the checkout intact. skills reference their own files and each other by relative path, so symlink rather than copying files out. then add one line to the project's `AGENTS.md` naming pstack, and every harness picks up the conventions each session.
 
@@ -41,6 +45,8 @@ git diff --relative=pstack <old-sha> <new-sha> -- pstack
 
 replay the edit at this repo's root. the [`harness`](./skills/harness/SKILL.md) skill and the neutral wording are ours; don't let a replay reintroduce cursor-specific tool calls or paths.
 
+two skills are renamed locally: `skills/tdd` is `skills/pstack-tdd`, and `skills/teach` is `skills/pstack-teach`. the names dodge collisions with [mattpocock/skills](https://github.com/mattpocock/skills), which installs same-named skills into the same `~/.agents/skills` directory. replay upstream `tdd` or `teach` edits into the renamed directories.
+
 ## get started
 
 two steps:
@@ -50,7 +56,7 @@ two steps:
 
 new here? the [pstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
 
-that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by model strength: precisely-specified code goes to sol, fast mechanical code goes to grok, and prose and judgment go to fable. the default panel is fable / sol / grok / opus 5. [`/setup-pstack`](./skills/setup-pstack/SKILL.md) changes any of it.
+that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by model strength: precisely-specified code, fast mechanical code, and prose and judgment each go to a different model. on cursor the default panel is fable / sol / grok / opus 5; on other harnesses the same roles resolve to the strongest models your harness can spawn. [`/setup-pstack`](./skills/setup-pstack/SKILL.md) detects your models and overrides any of it.
 
 ## usage
 
@@ -115,7 +121,7 @@ the full rules and playbooks live in [`skills/poteto-mode/SKILL.md`](./skills/po
 
 ## skills
 
-[`/poteto-mode`](./skills/poteto-mode/SKILL.md) runs most of these for you when a step needs them (`how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `unslop`, `no-comments`, `technical-writing`, `tdd`, and the principles). the table below is for when you want one directly:
+[`/poteto-mode`](./skills/poteto-mode/SKILL.md) runs most of these for you when a step needs them (`how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `unslop`, `no-comments`, `technical-writing`, `pstack-tdd`, and the principles). the table below is for when you want one directly:
 
 ```
 /how do we cancel runs? do we have an n+1 when we look up every run to cancel?
@@ -142,8 +148,8 @@ the full rules and playbooks live in [`skills/poteto-mode/SKILL.md`](./skills/po
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/setup-pstack`](./skills/setup-pstack/SKILL.md) | you want to pick which models pstack uses per role. detects your models and writes a config rule. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
-| [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not a summary of it. runs how + why and weaves one plain explanation, built up diagram by diagram. |
-| [`/tdd`](./skills/tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
+| [`/pstack-teach`](./skills/pstack-teach/SKILL.md) | you want to actually understand a change or subsystem, not a summary of it. runs how + why and weaves one plain explanation, built up diagram by diagram. |
+| [`/pstack-tdd`](./skills/pstack-tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
 | [`/no-comments`](./skills/no-comments/SKILL.md) | strip comments before review; spawns Comment Sicko, fixes accepted findings, offers encodings for claimed constraints. |
 | [`/typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
 | [`/figure-it-out`](./skills/figure-it-out/SKILL.md) | no bundled playbook fits. designs a rigorous, auditable playbook for the task. |
@@ -190,7 +196,7 @@ arena:             /arena take my prompt to the arena verbatim. i want to compar
 swarm:             /swarm check every package under packages/ against its check.sh. one worker per
                    package. one report.
 interrogate:       /interrogate review this pr.
-tdd:               /tdd implement
+pstack-tdd:        /pstack-tdd implement
 unslop:            can we unslop and tighten the new changes?
 reflect:           /reflect that took too long. capture what we learned so the next run doesn't
                    repeat it.

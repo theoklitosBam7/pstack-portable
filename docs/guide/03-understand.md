@@ -1,6 +1,6 @@
 # Understand the code before changing it
 
-Editing code you don't understand is how subtle regressions ship. pstack gives you four ways in. `/how` explains what the code does now. `/why` digs up the reasons it's shaped that way. `/teach` blends both into one explanation. `/recall` rebuilds your own recent context on a topic.
+Editing code you don't understand is how subtle regressions ship. pstack gives you four ways in. `/how` explains what the code does now. `/why` digs up the reasons it's shaped that way. `/pstack-teach` blends both into one explanation. `/recall` rebuilds your own recent context on a topic.
 
 ![A detective studies a machine blueprint with a magnifying glass while robots fetch case files; the evidence board behind her links clues under /how and /why.](./images/understanding.jpg)
 
@@ -30,13 +30,13 @@ The explanation comes first, so the critique stays grounded in how the thing rea
 
 The two compose naturally. `do why first then how` is a perfectly good prompt when you suspect the history explains the mess.
 
-## Actually understand it with `/teach`
+## Actually understand it with `/pstack-teach`
 
 ```text
-/teach me how this PR changes retries. convince me it fixes the cause and not the symptom.
+/pstack-teach me how this PR changes retries. convince me it fixes the cause and not the symptom.
 ```
 
-[`/teach`](../../skills/teach/SKILL.md) is for when a summary isn't enough. It runs `/how` and `/why`, for a small change maybe just one of them, and weaves the findings into a plain explanation that builds up diagram by diagram. The "convince me" framing is worth stealing. It turns the explanation into an argument you can poke at instead of a tour.
+[`/pstack-teach`](../../skills/pstack-teach/SKILL.md) is for when a summary isn't enough. It runs `/how` and `/why`, for a small change maybe just one of them, and weaves the findings into a plain explanation that builds up diagram by diagram. The "convince me" framing is worth stealing. It turns the explanation into an argument you can poke at instead of a tour.
 
 ## Rebuild your own context with `/recall`
 
