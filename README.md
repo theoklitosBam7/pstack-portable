@@ -16,7 +16,19 @@ fork it. improve it. make it yours. PRs are welcome!
 
 ## install
 
-the skills are harness agnostic and run on claude code, codex, gemini cli, opencode, amp, pi, goose, droid, and crush. put this repo somewhere stable and symlink the skills into the shared `.agents` directory, which all of them read:
+the skills are harness agnostic and run on claude code, codex, gemini cli, opencode, amp, pi, goose, droid, and crush.
+
+the official skills cli is the quickest way:
+
+```bash
+npx skills@latest add theoklitosBam7/pstack-portable
+```
+
+it finds every SKILL.md in this repo, asks which ones to install and for which agents, and symlinks them into each agent's skill directory. add `-g` to install user-level, `-y` to skip prompts, or `--all` to take everything. later, `npx skills update` pulls new versions.
+
+install all of them, not a subset. `poteto-mode` routes to the other skills by name, and a missing one breaks a step.
+
+or symlink a checkout yourself. put this repo somewhere stable and run:
 
 ```bash
 mkdir -p ~/.agents/skills && ln -sfn /path/to/pstack-portable/skills/* ~/.agents/skills/
