@@ -34,7 +34,7 @@ or symlink a checkout yourself. put this repo somewhere stable and run:
 mkdir -p ~/.agents/skills && ln -sfn /path/to/pstack-portable/skills/* ~/.agents/skills/
 ```
 
-if ln fails with `operation not permitted`, `~/.agents/skills` already holds a real directory of that name from another skills provider. ln replaces symlinks but never directories, so move or remove that copy first.
+a name collision fails silently. if `~/.agents/skills/how` already holds a real directory from another skills provider, `ln -sfn` exits 0 and links the pstack source inside it, leaving `~/.agents/skills/how/how`. the other copy keeps winning and pstack's skill never loads. remove or move the real directory first, then rerun. `find ~/.agents/skills -mindepth 2 -type l` lists strays from earlier runs.
 
 the source path has to be absolute. ln stores the source text as-is as the link's target, so a relative source like `skills/*` resolves against the link's own directory and ends up dangling.
 
@@ -159,6 +159,7 @@ the full rules and playbooks live in [`skills/poteto-mode/SKILL.md`](./skills/po
 | [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want several different models to try to break it, including a strict code-quality lens. |
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/setup-pstack`](./skills/setup-pstack/SKILL.md) | you want to pick which models pstack uses per role. detects your models and writes a config rule. |
+| [`/harness`](./skills/harness/SKILL.md) | you're using pstack outside cursor, or a step needs something your agent can't do, like spawning helper agents, picking a model per job, or reading old chats. it reworks the step with what you have and says what it swapped. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
 | [`/pstack-teach`](./skills/pstack-teach/SKILL.md) | you want to actually understand a change or subsystem, not a summary of it. runs how + why and weaves one plain explanation, built up diagram by diagram. |
 | [`/pstack-tdd`](./skills/pstack-tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
