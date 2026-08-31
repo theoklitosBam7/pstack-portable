@@ -63,4 +63,6 @@ If `ln` fails with `Operation not permitted`, the shared directory already holds
 
 The `$PWD` prefix matters: `ln` stores the source text verbatim as the link's target, so a relative source such as plain `skills/*` resolves against the link's own directory, not yours, and ends up dangling. Only absolute operands produce working symlinks.
 
-Keep the checkout intact. Skills reference their own files and sibling skills by relative path, so the symlinks must point into this tree rather than copying files out of it. `AGENTS.md` at the repo root of the target project is the always-on surface on every non-Cursor harness; add a line there naming pstack when you want its conventions applied every session.
+Keep the checkout intact. Skills reference their own files and sibling skills by relative path, so the symlinks must point into this tree rather than copying files out of it.
+
+To apply pstack conventions every session, add a line naming pstack to the project's always-on instruction file. The filename depends on the harness: Codex uses `AGENTS.md`, Claude Code uses `CLAUDE.md`, and Gemini CLI uses `GEMINI.md`. For another harness, read its adapter in `references/` and use the instruction file that adapter names.

@@ -38,7 +38,7 @@ a name collision fails silently. if `~/.agents/skills/how` already holds a real 
 
 the source path has to be absolute. ln stores the source text as-is as the link's target, so a relative source like `skills/*` resolves against the link's own directory and ends up dangling.
 
-keep the checkout intact. skills reference their own files and each other by relative path, so symlink rather than copying files out. then add one line to the project's `AGENTS.md` naming pstack, and every harness picks up the conventions each session.
+keep the checkout intact. skills reference their own files and each other by relative path, so symlink rather than copying files out. then add one line naming pstack to the project's always-on instruction file. the filename depends on the harness: use `AGENTS.md` for codex, `CLAUDE.md` for claude code, and `GEMINI.md` for gemini cli. for another harness, check its adapter in [`skills/harness/references/`](./skills/harness/references/).
 
 on cursor, install the original plugin instead: `/add-plugin pstack`.
 
