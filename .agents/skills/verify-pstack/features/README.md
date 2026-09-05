@@ -39,7 +39,7 @@ Keep implementation details out of the map. Name only user paths, stable handles
 
 ## Features
 
-- [Install](./install.md) covers the `~/.agents/skills/` link farm: completeness, symlink form, and targets inside the checkout.
+- [Install](./install.md) covers the `~/.agents/skills/` install: completeness, manual symlink targets, and the official Skills CLI lock.
 - [Model config](./model-config.md) covers `~/.config/pstack/models`: line format, role names, and live role resolution.
 - [Skill load](./skill-load.md) covers cold loading: frontmatter registration, link integrity, and a fresh agent quoting a real file.
 - [poteto-mode routing](./poteto-mode-routing.md) covers playbook links and a cold agent matching a task to a playbook.

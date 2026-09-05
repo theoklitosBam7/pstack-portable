@@ -1,11 +1,11 @@
 ---
 name: verify-pstack
-description: "Drive and prove pstack-portable's user-facing behavior: the ~/.agents/skills install resolves into this checkout, every skill file loads cold, and the model config parses. Use before claiming a pstack change works, or when a pstack skill misbehaves in a session."
+description: "Drive and prove pstack-portable's user-facing behavior: the ~/.agents/skills install is valid, every skill file loads cold, and the model config parses. Use before claiming a pstack change works, or when a pstack skill misbehaves in a session."
 ---
 
 # Verify pstack-portable
 
-pstack-portable is a skills collection, not a server. The app is markdown: the files under `skills/`, `agents/`, and `automations/` that harnesses load through the `~/.agents/skills/` symlink farm, plus the model config at `~/.config/pstack/models` that routes roles. A proof here means a real file loaded cold by a fresh agent, or a checker run with its output saved. The feature map in `features/` is the maintained list of what to drive.
+pstack-portable is a skills collection, not a server. The app is markdown: the files under `skills/`, `agents/`, and `automations/` that harnesses load through the install, plus the model config at `~/.config/pstack/models` that routes roles. A proof here means a real file loaded cold by a fresh agent, or a checker run with its output saved. The feature map in `features/` is the maintained list of what to drive.
 
 ## Launch
 
@@ -21,10 +21,10 @@ Teardown: no process exists, so there is nothing to stop. Concurrent runs are sa
 `verify.py doctor` answers "is this install worth driving?" It is read-only and checks:
 
 - checkout shape: `skills/` and `agents/` exist at the repo the script belongs to,
-- install: one link per `skills/` directory in `~/.agents/skills/`, links are symlinks not copies, every target resolves inside this checkout, nothing dangling,
+- install: every `skills/` directory has an entry in `~/.agents/skills/`; manual installs require symlinks that resolve inside this checkout, while Skills CLI installs require `~/.agents/.skill-lock.json` to record every skill from `theoklitosBam7/pstack-portable`,
 - model config: every non-comment line parses as `role: value`, roles come from the table in `skills/setup-pstack/SKILL.md`, panel list entries are non-empty.
 
-Exit 0 prints `doctor: ok`. `FAIL` lines name the section and include the fix (the README's `ln -sfn` command, or re-running `/setup-pstack`). Run doctor before the first drive of a run, and again after any failed drive. A verification run reports doctor failures; it never repairs the install itself. Repair is a setup action for the user.
+Exit 0 prints `doctor: ok`. `FAIL` lines name the section and include the fix (the README's install command, or re-running `/setup-pstack`). Run doctor before the first drive of a run, and again after any failed drive. A verification run reports doctor failures; it never repairs the install itself. Repair is a setup action for the user.
 
 ## Drive
 
@@ -41,7 +41,7 @@ python3 .agents/skills/verify-pstack/verify.py check
 
 ### Live: cold load
 
-Spawn one fresh subagent per skill under test. On pi, that is the `subagent` tool: `runs.run("load", { agent: "scout", task: BRIEF })`. On other harnesses, use the spawn-subagent operation in the `harness` skill. The brief template, with the absolute path filled in:
+Spawn one fresh subagent per skill under test. On pi, use the installed `subagent` extension with its `agent` and `task` fields. On other harnesses, use the spawn-subagent operation in the `harness` skill. Do not assume a built-in agent name. The brief template, with the absolute path filled in:
 
 ```text
 Read the file at <ABSOLUTE PATH> completely before anything else. Using only that file, answer:
@@ -55,7 +55,7 @@ Then prove the reply against the disk:
 
 ```bash
 rg -F "<answer 1 quote>" <ABSOLUTE PATH>   # expect exactly one match
-test -f "<skill dir>/<answer 3 path>" && echo exists
+test -f "<skill dir>/<answer 3 path without any #fragment>" && echo exists
 ```
 
 A verbatim quote proves the file loaded. A paraphrase is a fail. Do not tell the subagent it is being verified.
