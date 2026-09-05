@@ -48,7 +48,9 @@ run [`/setup-pstack`](./skills/setup-pstack/SKILL.md) once inside your agent eit
 
 ## upstream sync
 
-forked from [`cursor/plugins`](https://github.com/cursor/plugins) at commit `bdf7aa3` (pstack `0.14.3`). that commit is tagged `upstream-pstack-0.14.3` here, and the remote `upstream` points at the marketplace repo.
+forked from [`cursor/plugins`](https://github.com/cursor/plugins) at commit `bdf7aa3` (pstack `0.14.3`), tagged `upstream-pstack-0.14.3` here, and synced through `93b00b8` (pstack `0.14.8`). the remote `upstream` points at the marketplace repo. the portable release version stays independent of the upstream one.
+
+the `0.14.8` sync ports the forge-neutral pr workflows: github cli (`gh`) by default, the optional origin cli when its `origin` executable can resolve the repository (a separate cli, not the git remote named `origin`), base-branch stacks instead of graphite, and bottom-up merging. it also ports the regression lane and dual-sided perf gates, the fable 5.1 model defaults (ported as role intent; the concrete cursor slugs live in the cursor adapter), the typescript schema-over-guards guidance, and `disable-model-invocation` on `how` and `why`. intentional exclusions: the `make-bot-ui` skill, which needs cursor routines services this port does not assume, the marketplace logo and plugin manifest, the `paths` activation field, which no supported harness honors, and `disable-model-invocation` on `unslop` and `typescript-best-practices`, which stay automatic.
 
 to port an upstream change:
 
@@ -70,7 +72,7 @@ two steps:
 
 new here? the [pstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
 
-that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by model strength: precisely-specified code, fast mechanical code, and prose and judgment each go to a different model. on cursor the default panel is fable / sol / grok / opus 5; on other harnesses the same roles resolve to the strongest models your harness can spawn. [`/setup-pstack`](./skills/setup-pstack/SKILL.md) detects your models and overrides any of it.
+that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by model strength: precisely-specified code, prose, and judgment go to one strong model, and fast mechanical code goes to a fast model. on cursor the default is fable 5.1 for both, with the panel at fable 5.1 / sol / grok / opus 5; on other harnesses the same roles resolve to the strongest models your harness can spawn. [`/setup-pstack`](./skills/setup-pstack/SKILL.md) detects your models and overrides any of it.
 
 ## usage
 
@@ -108,11 +110,11 @@ morning.
 | [authoring a skill](./skills/poteto-mode/playbooks/authoring-a-skill.md) | writing or editing a SKILL.md. |
 | [eval](./skills/poteto-mode/playbooks/eval.md) | test how a skill or prompt change affects agent behavior, blinded. |
 | [babysit](./skills/poteto-mode/playbooks/babysit.md) | drive a pr or a stack to merge-ready: conflicts, review threads, ci. |
-| [shipping](./skills/poteto-mode/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run with graphite merge-when-ready. |
+| [shipping](./skills/poteto-mode/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run bottom-up through github by default or origin when available. |
 | [autonomous run](./skills/poteto-mode/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
 | [orchestrate](./skills/poteto-mode/playbooks/orchestrate.md) | a standing project handed to one coordinator chat: multi-day, many stacked prs, fleets of subagents. |
 | [autopilot-full](./skills/poteto-mode/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr and root verification of each merge-ready head. |
-| [autopilot-stack](./skills/poteto-mode/playbooks/autopilot-stack.md) | build and verify one linear graphite stack for the operator to review and land. |
+| [autopilot-stack](./skills/poteto-mode/playbooks/autopilot-stack.md) | build and verify one linear base-branch stack for the operator to review and land. |
 | [session pickup](./skills/poteto-mode/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
 | [pause safely](./skills/poteto-mode/playbooks/pause-safely.md) | suspend in-flight work cleanly so it can be resumed later. |
 | [multi-phase plan](./skills/poteto-mode/playbooks/multi-phase-plan.md) | work that spans phases or stacked PRs. |
