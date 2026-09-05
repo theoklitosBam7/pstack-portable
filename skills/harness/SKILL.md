@@ -11,8 +11,8 @@ pstack skills are written against a small set of neutral operations. They do not
 
 Run this before the first pstack operation, then keep the answer for the session. Do not re-detect per skill.
 
-1. Environment variables first. `CLAUDECODE=1` means Claude Code. `OPENCODE=1` or `OPENCODE_PID` set means opencode. `AI_AGENT=pi` or `PI_CODING_AGENT=true` means pi. `CODEX_SANDBOX` set means Codex CLI, a weak signal because it only appears under sandboxing.
-2. Tool fingerprints next. `AskUserQuestion` plus an `Agent` tool means Claude Code. `request_user_input` plus `update_plan` means Codex CLI. `ask_user` plus `write_todos` means Gemini CLI. A `task` tool with `subagent_type` plus `todowrite` means opencode. `AskUser` plus `TaskOutput` means Factory Droid. `delegate` plus `load` means Goose. A read-only `agent` tool plus `crush_info` means Crush. Built-in specialists named `Review`, `Search`, or `Oracle` with no markdown persona support means Amp. `AskQuestion` plus a `Task` tool means Cursor.
+1. Environment variables first. `COPILOT_CLI=1` means GitHub Copilot CLI, adapter `copilot-cli`. `CLAUDECODE=1` means Claude Code. `OPENCODE=1` or `OPENCODE_PID` set means opencode. `AI_AGENT=pi` or `PI_CODING_AGENT=true` means pi. `CODEX_SANDBOX` set means Codex CLI, a weak signal because it only appears under sandboxing.
+2. Tool fingerprints next. `AskUserQuestion` plus an `Agent` tool means Claude Code. `request_user_input` plus `update_plan` means Codex CLI. `ask_user` plus `write_todos` means Gemini CLI. A `task` tool with `subagent_type` plus `todowrite` means opencode. `AskUser` plus `TaskOutput` means Factory Droid. `delegate` plus `load` means Goose. A read-only `agent` tool plus `crush_info` means Crush. Built-in specialists named `Review`, `Search`, or `Oracle` with no markdown persona support means Amp. `AskQuestion` plus a `Task` tool means Cursor. A `task` tool plus `read_agent`, `list_agents`, and `write_agent` means GitHub Copilot CLI, adapter `copilot-cli`.
 3. Still unknown after both checks: ask the user once which harness this is, then remember it.
 
 After detection, read `references/<harness>.md` from this skill and apply it for the rest of the session.
@@ -65,4 +65,4 @@ The `$PWD` prefix matters: `ln` stores the source text verbatim as the link's ta
 
 Keep the checkout intact. Skills reference their own files and sibling skills by relative path, so the symlinks must point into this tree rather than copying files out of it.
 
-To apply pstack conventions every session, add a line naming pstack to the project's always-on instruction file. The filename depends on the harness: Codex uses `AGENTS.md`, Claude Code uses `CLAUDE.md`, and Gemini CLI uses `GEMINI.md`. For another harness, read its adapter in `references/` and use the instruction file that adapter names.
+After installation, run [setup-pstack](../setup-pstack/SKILL.md#6-write-the-config) to choose models for pstack roles and save them in `~/.config/pstack/models`. Step 6 adds a config-reading instruction to the user-level file named in your adapter, or writes the Cursor mirror. This makes the model choices available to later sessions across projects. Skill and persona use follows the relevant skill instructions.

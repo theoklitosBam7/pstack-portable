@@ -14,7 +14,9 @@
 
 ## Config
 
-`~/.config/pstack/models`. Always-on surface is `~/.config/crush/CRUSH.md` and `~/.config/AGENTS.md` plus project `AGENTS.md`. Reference the config path there for per-session loading.
+Model config: `~/.config/pstack/models`.
+
+User-level instruction file: `~/.config/crush/CRUSH.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
 ## Default model roles
 

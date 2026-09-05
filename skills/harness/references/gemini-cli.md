@@ -14,7 +14,9 @@
 
 ## Config
 
-`~/.config/pstack/models`. `GEMINI.md` is the always-on surface, user level `~/.gemini/GEMINI.md` plus project root. Reference the config path there if you want it loaded each session.
+Model config: `~/.config/pstack/models`.
+
+User-level instruction file: `~/.gemini/GEMINI.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
 ## Default model roles
 

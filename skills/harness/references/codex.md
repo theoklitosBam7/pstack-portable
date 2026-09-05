@@ -14,7 +14,9 @@
 
 ## Config
 
-`~/.config/pstack/models`. Reference it from `~/.codex/AGENTS.md` if you want it always in context.
+Model config: `~/.config/pstack/models`.
+
+User-level instruction file: `~/.codex/AGENTS.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
 ## Default model roles
 

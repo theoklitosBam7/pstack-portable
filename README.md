@@ -16,7 +16,7 @@ fork it. improve it. make it yours. PRs are welcome!
 
 ## install
 
-the skills are harness agnostic and run on claude code, codex, gemini cli, opencode, amp, pi, goose, droid, and crush.
+the skills are harness agnostic and run on claude code, codex, gemini cli, opencode, amp, pi, goose, droid, crush, and [github copilot cli](./skills/harness/references/copilot-cli.md).
 
 the official skills cli is the quickest way:
 
@@ -38,11 +38,13 @@ a name collision fails silently. if `~/.agents/skills/how` already holds a real 
 
 the source path has to be absolute. ln stores the source text as-is as the link's target, so a relative source like `skills/*` resolves against the link's own directory and ends up dangling.
 
-keep the checkout intact. skills reference their own files and each other by relative path, so symlink rather than copying files out. then add one line naming pstack to the project's always-on instruction file. the filename depends on the harness: use `AGENTS.md` for codex, `CLAUDE.md` for claude code, and `GEMINI.md` for gemini cli. for another harness, check its adapter in [`skills/harness/references/`](./skills/harness/references/).
+keep the checkout intact. skills reference their own files and each other by relative path, so symlink rather than copying files out.
+
+on github copilot cli, the shared `~/.agents/skills/` directory works with the same install command. run `copilot skill list` to check discovery. setup uses `~/.copilot/copilot-instructions.md` for the models-config instruction, or `$COPILOT_HOME/copilot-instructions.md` when `COPILOT_HOME` is set.
 
 on cursor, install the original plugin instead: `/add-plugin pstack`.
 
-run [`/setup-pstack`](./skills/setup-pstack/SKILL.md) once inside your agent either way. it detects the harness, enumerates the models you can spawn there, and writes a portable config at `~/.config/pstack/models`, mirrored into cursor's always-applied rule. the [`harness`](./skills/harness/SKILL.md) skill maps pstack's operations onto each harness and carries the fallback rules when a harness lacks subagents, per-model routing, or readable transcripts. skills never skip a step silently, they substitute and say so.
+run [`/setup-pstack`](./skills/setup-pstack/SKILL.md) once inside your agent either way. it detects the harness, enumerates the models you can spawn there, and writes your model-role choices to `~/.config/pstack/models`. [step 6](./skills/setup-pstack/SKILL.md#6-write-the-config) adds an instruction to read that config before selecting models for pstack roles. it uses the exact user-level file named in your [harness adapter](./skills/harness/references/), so the instruction applies across projects. on cursor, setup writes the model mappings to `~/.cursor/rules/pstack-models.mdc` with `alwaysApply: true` instead. the [`harness`](./skills/harness/SKILL.md) skill maps pstack's operations onto each harness and carries the fallback rules when a harness lacks subagents, per-model routing, or readable transcripts. skills never skip a step silently, they substitute and say so.
 
 ## upstream sync
 
@@ -158,7 +160,7 @@ the full rules and playbooks live in [`skills/poteto-mode/SKILL.md`](./skills/po
 | [`/swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
 | [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want several different models to try to break it, including a strict code-quality lens. |
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
-| [`/setup-pstack`](./skills/setup-pstack/SKILL.md) | you want to pick which models pstack uses per role. detects your models and writes a config rule. |
+| [`/setup-pstack`](./skills/setup-pstack/SKILL.md) | you want to pick which models pstack uses per role. detects your models and writes `~/.config/pstack/models`. |
 | [`/harness`](./skills/harness/SKILL.md) | you're using pstack outside cursor, or a step needs something your agent can't do, like spawning helper agents, picking a model per job, or reading old chats. it reworks the step with what you have and says what it swapped. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
 | [`/pstack-teach`](./skills/pstack-teach/SKILL.md) | you want to actually understand a change or subsystem, not a summary of it. runs how + why and weaves one plain explanation, built up diagram by diagram. |
@@ -280,7 +282,7 @@ cursor already has a good plan mode that works well with pstack. but personally,
 
 type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through pstack underneath. you keep pstack as the base and end up with your own routing skill alongside `poteto-mode`.
 
-models are configurable too. type [`/setup-pstack`](./skills/setup-pstack/SKILL.md). it detects the models you have access to and writes a small always-applied rule mapping each role (code, judgment, the review panels) to a model. every skill reads it and falls back to sensible defaults when the rule is absent, so you override only what you want.
+models are configurable too. type [`/setup-pstack`](./skills/setup-pstack/SKILL.md). it detects the models you have access to and saves the role-to-model mappings in `~/.config/pstack/models`. [step 6](./skills/setup-pstack/SKILL.md#6-write-the-config) makes those choices available to later sessions across projects. roles without a configured value use the defaults described in the harness skill.
 
 ## automations
 
