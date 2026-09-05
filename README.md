@@ -48,7 +48,7 @@ run [`/setup-pstack`](./skills/setup-pstack/SKILL.md) once inside your agent eit
 
 ## upstream sync
 
-forked from [`cursor/plugins`](https://github.com/cursor/plugins) at commit `bdf7aa3` (pstack `0.14.3`), tagged `upstream-pstack-0.14.3` here, and synced through `93b00b8` (pstack `0.14.8`). the remote `upstream` points at the marketplace repo. the portable release version stays independent of the upstream one.
+forked from [`cursor/plugins`](https://github.com/cursor/plugins) at commit `bdf7aa3` (pstack `0.14.3`), tagged `upstream-pstack-0.14.3` here, and synced through `93b00b8` (pstack `0.14.8`), tagged `upstream-pstack-0.14.8` here at commit `c1a9bcb`. the remote `upstream` points at the marketplace repo. the portable release version stays independent of the upstream one.
 
 the `0.14.8` sync ports the forge-neutral pr workflows: github cli (`gh`) by default, the optional origin cli when its `origin` executable can resolve the repository (a separate cli, not the git remote named `origin`), base-branch stacks instead of graphite, and bottom-up merging. it also ports the regression lane and dual-sided perf gates, the fable 5.1 model defaults (ported as role intent; the concrete cursor slugs live in the cursor adapter), the typescript schema-over-guards guidance, and `disable-model-invocation` on `how` and `why`. intentional exclusions: the `make-bot-ui` skill, which needs cursor routines services this port does not assume, the marketplace logo and plugin manifest, the `paths` activation field, which no supported harness honors, and `disable-model-invocation` on `unslop` and `typescript-best-practices`, which stay automatic.
 
