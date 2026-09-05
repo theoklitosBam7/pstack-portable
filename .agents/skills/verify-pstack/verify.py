@@ -9,6 +9,7 @@ Exit 0 when nothing fails. `warning:` and `note:` lines inform; only `FAIL`
 lines fail the run.
 """
 
+import json
 import os
 import re
 import sys
@@ -17,7 +18,9 @@ from pathlib import Path
 # verify.py sits at <repo>/.agents/skills/verify-pstack/verify.py
 REPO = Path(__file__).resolve().parents[3]
 INSTALL = Path.home() / ".agents" / "skills"
+LOCK = Path.home() / ".agents" / ".skill-lock.json"
 CONFIG = Path.home() / ".config" / "pstack" / "models"
+PSTACK_SOURCE = "theoklitosBam7/pstack-portable"
 
 KNOWN_ROLES = {
     "code", "fast", "judgment", "hardest",
@@ -52,6 +55,65 @@ def finish(label, failures, warnings, notes):
     print(f"{label}: ok")
 
 
+def validate_skill_lock(skill_names, failures, notes):
+    if not LOCK.exists():
+        notes.append(f"lock: {LOCK} absent; manual symlink installation remains supported")
+        return False
+
+    try:
+        data = json.loads(LOCK.read_text())
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        failures.append(f"lock: {LOCK} is not valid JSON ({exc})")
+        return False
+
+    if not isinstance(data, dict) or not isinstance(data.get("skills"), dict):
+        failures.append(f"lock: {LOCK} has no skills object")
+        return False
+
+    skills = data["skills"]
+    tracked = [
+        name
+        for name in skill_names
+        if isinstance(skills.get(name), dict)
+        and skills[name].get("source") == PSTACK_SOURCE
+    ]
+    if not tracked:
+        notes.append(
+            f"lock: {LOCK} has no entries from {PSTACK_SOURCE}; "
+            "manual symlink installation remains supported"
+        )
+        return False
+
+    invalid = False
+    for name in skill_names:
+        entry = skills.get(name)
+        if not isinstance(entry, dict):
+            failures.append(f"lock: {LOCK} has no entry for pstack skill {name!r}")
+            invalid = True
+            continue
+        if entry.get("source") != PSTACK_SOURCE:
+            failures.append(
+                f"lock: {LOCK} entry {name!r} is from {entry.get('source')!r}, "
+                f"not {PSTACK_SOURCE!r}"
+            )
+            invalid = True
+        expected_path = f"skills/{name}/SKILL.md"
+        if entry.get("skillPath") != expected_path:
+            failures.append(
+                f"lock: {LOCK} entry {name!r} has skillPath "
+                f"{entry.get('skillPath')!r}, expected {expected_path!r}"
+            )
+            invalid = True
+
+    if not invalid:
+        notes.append(
+            f"lock: {LOCK} covers {len(skill_names)} checkout skill(s) "
+            f"from {PSTACK_SOURCE}"
+        )
+        return True
+    return False
+
+
 def cmd_doctor():
     failures, warnings, notes = [], [], []
 
@@ -61,6 +123,7 @@ def cmd_doctor():
         return
 
     skill_dirs = sorted(d.name for d in (REPO / "skills").iterdir() if d.is_dir())
+    cli_managed = validate_skill_lock(skill_dirs, failures, notes)
     missing = [n for n in skill_dirs if not os.path.lexists(INSTALL / n)]
     if missing:
         failures.append(
@@ -73,6 +136,12 @@ def cmd_doctor():
         if not os.path.lexists(link):
             continue
         if not link.is_symlink():
+            if cli_managed:
+                if not link.is_dir() or not (link / "SKILL.md").is_file():
+                    failures.append(
+                        f"install: {link} is not a Skills CLI skill directory with SKILL.md"
+                    )
+                continue
             failures.append(
                 f"install: {link} is not a symlink (a copy shadows the repo skill; replace it with a link)"
             )
@@ -147,15 +216,19 @@ def cmd_check():
     for f in md_files():
         rel = f.relative_to(REPO)
         nfiles += 1
-        if f.name == "SKILL.md":
+        if f.name == "SKILL.md" or f.parent == REPO / "agents":
             keys = frontmatter(f)
             if keys is None:
                 failures.append(f"{rel}: SKILL.md has no frontmatter block")
             else:
                 if not keys.get("name"):
                     failures.append(f"{rel}: frontmatter has no name")
-                elif keys["name"] != f.parent.name:
-                    warnings.append(f"{rel}: name {keys['name']!r} != directory {f.parent.name!r}")
+                else:
+                    expected_name = f.parent.name if f.name == "SKILL.md" else f.stem
+                    if keys["name"] != expected_name:
+                        warnings.append(
+                            f"{rel}: name {keys['name']!r} != expected {expected_name!r}"
+                        )
                 if not keys.get("description"):
                     failures.append(f"{rel}: frontmatter has no description")
         for i, line in enumerate(f.read_text().splitlines(), 1):

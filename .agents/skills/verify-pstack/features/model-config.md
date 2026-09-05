@@ -1,6 +1,6 @@
 # Model config
 
-`/setup-pstack` writes `~/.config/pstack/models`, one `role: model` line per role, and every pstack skill reads it to route subagents. A missing line falls back to the session model, and `auto` or `inherit-parent` also means the session model.
+`/setup-pstack` writes `~/.config/pstack/models`, one `role: model` line per role, and every pstack skill reads it to route subagents. A missing line falls back to the harness adapter's default, and adapters without a different default use the session model. `auto` and `inherit-parent` also mean the session model.
 
 ## Sub-features
 
@@ -21,10 +21,10 @@ Preconditions:
 
 - Format and role audit, expect `doctor: ok` or `FAIL` lines with line numbers: `python3 .agents/skills/verify-pstack/verify.py doctor`
 - Role source of truth, expect each configured role name to appear in the setup skill: `rg -n "how critics|arena runners|interrogate reviewers" skills/setup-pstack/SKILL.md`
-- Live resolution, expect every listed agent to show `source: inherits current session model` while the config maps roles to `auto`: call `subagent({ action: "models" })` (pi) and save the output to evidence.
+- Live resolution, use the active harness's supported model inspection or real subagent invocation, and save the output to evidence. Confirm that `auto` and `inherit-parent` use the current session model and that configured real model IDs are accepted.
 
 ## Gotchas
 
 - Do not write the config during a verification run. Changing routing mid-run invalidates earlier evidence.
 - Panel values with `auto` still count fan-out per entry: `auto, auto` spawns two subagents on the same model.
-- The checker cannot confirm a model id actually spawns. Id reality needs the harness models API; on pi that is `subagent({ action: "models" })`, which is also the live resolution proof above.
+- The checker cannot confirm a model ID actually spawns. Confirm ID reality with the active harness's model listing or a real subagent invocation.

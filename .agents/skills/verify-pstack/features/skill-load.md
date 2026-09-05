@@ -19,7 +19,7 @@ Preconditions:
 - doctor has run this session.
 
 - Full audit, expect `check: ok` with file and link counts: `python3 .agents/skills/verify-pstack/verify.py check`
-- Cold load, one skill per drive. Pick the target (for example `skills/principle-prove-it-works/SKILL.md`) and spawn one subagent (`runs.run("load", { agent: "scout", task: BRIEF })`) with this brief, path filled in:
+- Cold load, one skill per drive. Pick the target (for example `skills/principle-prove-it-works/SKILL.md`) and spawn one fresh read-only subagent through the active harness operation. On pi, use the installed `subagent` extension's `agent` plus `task` fields; do not assume a built-in agent name. Use this brief, with the path filled in:
 
 ```text
 Read the file at <ABSOLUTE PATH> completely before anything else. Using only that file, answer:
@@ -30,7 +30,7 @@ Do not open any other file. Reply with three numbered answers.
 ```
 
 - Confirm the quote is real, expect exactly one match: `rg -F "<answer 1 quote>" <ABSOLUTE PATH>`
-- Confirm answer 3's target exists: `test -f "<skill dir>/<answer 3 path>" && echo exists`
+- Confirm answer 3's target exists: remove any `#fragment` from the reported path, then run `test -f "<skill dir>/<answer 3 path>" && echo exists`
 - Save the brief, the reply, and both confirmation outputs to evidence.
 
 ## Gotchas
