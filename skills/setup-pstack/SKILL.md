@@ -15,7 +15,7 @@ Run the detection in the **harness** skill (`../harness/SKILL.md`). Every later 
 
 ### 2. Detect available models
 
-Enumerate the model ids you can pass to a subagent in this session. That is the dependable source. Check the harness adapter for how: Cursor's `Task` tool errors list valid slugs, Claude Code exposes `sonnet`/`opus`/`haiku`/`fable` aliases, opencode and Crush list `provider/model-id` forms, Amp routes through the Dial. If the harness also exposes a models API or CLI, prefer it for completeness. If you cannot detect any, ask the user to paste the ids they have access to. Never write a real id you have not confirmed is available. The aliases `inherit-parent` and `auto` are always valid even though they are not detected ids.
+Enumerate the model ids you can pass to a subagent in this session. That is the dependable source. Check the harness adapter for how: Cursor's `Task` tool errors list valid slugs, Claude Code exposes `sonnet`/`opus`/`haiku`/`fable` aliases, opencode and Crush list `provider/model-id` forms, Amp routes through the Dial. GitHub Copilot CLI lists session models with `/model`; confirm subagent model choices against the active `task` tool schema or `/subagents`. If the harness also exposes a models API or CLI, prefer it for completeness. If you cannot detect any, ask the user to paste the ids they have access to. Never write a real id you have not confirmed is available. The aliases `inherit-parent` and `auto` are always valid even though they are not detected ids.
 
 ### 3. Load current state
 
@@ -54,11 +54,19 @@ architect runners: <list of up to four distinct-family models>
 interrogate reviewers: <list of up to four distinct-family models>
 ```
 
-On Cursor, also write the mirror `~/.cursor/rules/pstack-models.mdc` with `alwaysApply: true` and the same lines, so the choices inject every session. On other harnesses, add one line to the always-on context file the adapter names (`AGENTS.md` or equivalent) pointing at `~/.config/pstack/models`, so sessions that never run this skill still find the config.
+On Cursor, also write the mirror `~/.cursor/rules/pstack-models.mdc` with `alwaysApply: true` and the same role mappings. Cursor reads this mirror automatically.
+
+On other harnesses, use the exact user-level instruction file named in the adapter's Config section. Create the parent directory and file if missing. Preserve existing instructions. Add this line once, or update an existing pstack models-config instruction to match:
+
+```text
+Before selecting models for pstack roles, read `~/.config/pstack/models` if it exists.
+```
+
+Use the user-level file so the instruction applies across projects. This step configures model-role lookup. Skills, personas, and playbooks still use their own invocation instructions.
 
 ### 7. Confirm
 
-Tell the user the config was written and that it applies to new sessions. Re-running this skill updates it.
+Tell the user the exact config path and instruction-file or mirror path written. Explain that later sessions read the saved model choices when selecting models for pstack roles. Re-running this skill updates those choices.
 
 ### 8. Offer a verification skill (optional)
 

@@ -14,7 +14,9 @@
 
 ## Config
 
-`~/.config/pstack/models` is the source of truth. There is no always-applied rules file to mirror into; if you want the roles injected each session, import the config from `CLAUDE.md` or note the file in `~/.claude/CLAUDE.md`.
+Model config: `~/.config/pstack/models`.
+
+User-level instruction file: `~/.claude/CLAUDE.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
 ## Default model roles
 

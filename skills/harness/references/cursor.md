@@ -14,7 +14,9 @@
 
 ## Config
 
-`/setup-pstack` writes both `~/.config/pstack/models` and the mirror `~/.cursor/rules/pstack-models.mdc` with `alwaysApply: true`, so the choices inject every session. The `.mdc` mirror is the one Cursor reads automatically.
+Model config: `~/.config/pstack/models`.
+
+User-level mirror: `~/.cursor/rules/pstack-models.mdc` with `alwaysApply: true`. [Setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) writes the same role mappings to this mirror, which Cursor reads automatically. This mirror completes the models-config setup for Cursor.
 
 ## Default model roles
 
