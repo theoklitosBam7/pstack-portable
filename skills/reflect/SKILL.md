@@ -36,11 +36,11 @@ For each candidate, read the first JSONL line and check that `message.content[0]
 
 One message, three subagents with explicit model roles from the pstack model config, per the **harness** skill, in agent mode. Reviewers need MCP access for context lookups, tickets, chat threads, observability traces referenced in the transcript, where the harness strips MCPs in readonly mode. The prompt forbids file writes; the parent applies edits.
 
-| Lens | `model` | Prompt template |
+| Lens | Model role | Prompt template |
 |---|---|---|
-| Judgment | your configured reflect-judgment model (default `claude-fable-5-thinking-max`) | `references/judgment-reviewer.md` |
-| Tooling | your configured reflect-tooling model (default `gpt-5.6-sol-max`) | `references/tooling-reviewer.md` |
-| Divergent | your configured reflect-judgment model (default `claude-fable-5-thinking-max`) | `references/divergent-reviewer.md` |
+| Judgment | the `reflect judgment` role from the pstack model config, adapter default otherwise | `references/judgment-reviewer.md` |
+| Tooling | the `reflect tooling` role from the pstack model config, adapter default otherwise | `references/tooling-reviewer.md` |
+| Divergent | the `reflect judgment` role from the pstack model config, adapter default otherwise | `references/divergent-reviewer.md` |
 
 Pass each template verbatim, substituting the transcript path or digest where marked. Reviewers return findings in their response.
 
