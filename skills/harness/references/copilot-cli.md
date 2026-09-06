@@ -5,8 +5,8 @@
 | Neutral op | GitHub Copilot CLI call |
 |---|---|
 | ask-user | `ask_user`. If disabled by `--no-ask-user`, ask in plain text using the fallback policy |
-| todolist | `update_todo` when exposed. Otherwise keep a Markdown checklist in the reply |
-| spawn-subagent | `task` with `agent_type` selecting a built-in or custom agent. Use the live tool schema for the brief, model selection, and background execution. `read_agent` checks progress, `list_agents` lists agents, and `write_agent` sends follow-up messages. For read-only exploration use `explore`; for code review use `code-review` |
+| todolist | Use the live structured task-list mechanism or tool when exposed. Otherwise keep a Markdown checklist in the reply |
+| spawn-subagent | `task` with `agent_type` selecting a built-in or custom agent. Use the live tool schema for the brief, model selection, and background execution. `read_agent` retrieves status or results for a known agent, normally after a completion notification; `list_agents` lists agents; and `write_agent` sends follow-up messages. For read-only exploration use `explore`; for code review use `code-review` |
 | persona | Personal definitions in `~/.copilot/agents/<name>.agent.md`, or project definitions in `.github/agents/<name>.agent.md`. Convert `agents/poteto-agent.md` and `agents/comment-sicko.md` to this format, preserving the prompt, `name`, and `description`. Use supported `model` and `tools` fields as needed; omit `is_background`. Restrict Comment Sicko to read-only tools. If custom agents are unavailable, put the persona prompt at the start of the subagent brief |
 | discover-mcps | `copilot mcp list`, in-session `/mcp`, or the exposed MCP tools. User config is `~/.copilot/mcp-config.json`; project config can be `.mcp.json` or `.github/mcp.json` |
 | find-transcripts | `~/.copilot/session-state/<session-id>/events.jsonl`. Use `COPILOT_AGENT_SESSION_ID` when available to identify the current session. Read event logs without changing them |
@@ -22,7 +22,7 @@ User-level instruction file: `~/.copilot/copilot-instructions.md`. If `COPILOT_H
 
 ## Default model roles
 
-Use `/model` to inspect available session models and `/subagents` to inspect subagent model choices. Confirm each role's model against the active tool schema or custom agent configuration before saving it. For `inherit-parent`, use the session model and check that the selected agent profile or `/subagents` setting does not supply a different model. Copilot's own Auto routing can override agent model choices; it is not the pstack `auto` alias for the session model.
+Use `/model` to inspect available session models and `/subagents` to inspect subagent model choices. Confirm each role's model against the active tool schema or custom agent configuration before saving it. For `inherit-parent`, use the session model and check that the selected agent profile or `/subagents` setting does not supply a different model. Copilot `/model auto` is Copilot automatic session routing; it is not the pstack `auto` alias, which means inherit the session model.
 
 Without config, use the session model. If per-subagent model selection is unavailable, apply the harness fallback and state that the panel uses one model.
 
