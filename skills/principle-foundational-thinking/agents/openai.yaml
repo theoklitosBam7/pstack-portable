@@ -1,0 +1,7 @@
+interface:
+  display_name: "Foundational Thinking"
+  short_description: "Set core data structures before writing logic"
+  default_prompt: "Use $principle-foundational-thinking to choose the core data structures before implementation."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Poteto Mode"
+  short_description: "Use poteto's rigorous engineering workflow"
+  default_prompt: "Use $poteto-mode to handle this task with rigorous engineering workflows."
+
+policy:
+  allow_implicit_invocation: false

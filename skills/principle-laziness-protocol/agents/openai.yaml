@@ -1,0 +1,7 @@
+interface:
+  display_name: "Laziness Protocol"
+  short_description: "Choose the smallest change that solves the problem"
+  default_prompt: "Use $principle-laziness-protocol to reduce this change to the smallest useful form."
+
+policy:
+  allow_implicit_invocation: false

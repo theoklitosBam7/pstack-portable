@@ -1,0 +1,7 @@
+interface:
+  display_name: "Build the Lever"
+  short_description: "Build reusable proof or automation for the work"
+  default_prompt: "Use $principle-build-the-lever to build a reusable tool that performs or proves this work."
+
+policy:
+  allow_implicit_invocation: false

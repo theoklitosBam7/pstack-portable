@@ -1,0 +1,7 @@
+interface:
+  display_name: "Arena"
+  short_description: "Compare parallel solutions to one hard task"
+  default_prompt: "Use $arena to produce parallel solutions for this task and combine the strongest parts."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Redesign from First Principles"
+  short_description: "Integrate new requirements into the core design"
+  default_prompt: "Use $principle-redesign-from-first-principles to redesign this work around the new requirement."
+
+policy:
+  allow_implicit_invocation: false

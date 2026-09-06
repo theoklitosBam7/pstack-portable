@@ -1,0 +1,7 @@
+interface:
+  display_name: "Automate Me"
+  short_description: "Draft a personal workflow skill from real work"
+  default_prompt: "Use $automate-me to create or update my personal -mode skill from my working style."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Experience First"
+  short_description: "Choose polished user experience over easy delivery"
+  default_prompt: "Use $principle-experience-first to decide this product tradeoff for the user."
+
+policy:
+  allow_implicit_invocation: false

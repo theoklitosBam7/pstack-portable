@@ -1,0 +1,7 @@
+interface:
+  display_name: "Setup pstack"
+  short_description: "Configure pstack model roles for this harness"
+  default_prompt: "Use $setup-pstack to configure pstack model roles for my current harness."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Never Block on the Human"
+  short_description: "Proceed on reversible work without unnecessary questions"
+  default_prompt: "Use $principle-never-block-on-the-human to proceed with this reversible work."
+
+policy:
+  allow_implicit_invocation: false

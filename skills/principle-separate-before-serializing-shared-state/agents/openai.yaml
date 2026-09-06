@@ -1,0 +1,7 @@
+interface:
+  display_name: "Separate Before Serializing Shared State"
+  short_description: "Remove shared writes before adding coordination"
+  default_prompt: "Use $principle-separate-before-serializing-shared-state to remove shared writes where possible."
+
+policy:
+  allow_implicit_invocation: false

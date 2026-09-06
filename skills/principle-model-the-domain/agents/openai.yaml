@@ -1,0 +1,7 @@
+interface:
+  display_name: "Model the Domain"
+  short_description: "Represent domain rules in types and structures"
+  default_prompt: "Use $principle-model-the-domain to model this stateful domain in a clear structure."
+
+policy:
+  allow_implicit_invocation: false
