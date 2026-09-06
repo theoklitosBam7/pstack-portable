@@ -1,0 +1,7 @@
+interface:
+  display_name: "Encode Lessons in Structure"
+  short_description: "Turn recurring corrections into enforceable rules"
+  default_prompt: "Use $principle-encode-lessons-in-structure to encode this recurring lesson in structure."
+
+policy:
+  allow_implicit_invocation: false

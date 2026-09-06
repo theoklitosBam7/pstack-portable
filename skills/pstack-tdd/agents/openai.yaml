@@ -1,0 +1,7 @@
+interface:
+  display_name: "pstack TDD"
+  short_description: "Write a failing local test before the fix"
+  default_prompt: "Use $pstack-tdd to write a failing local test before implementing this fix."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Recall"
+  short_description: "Rebuild recent working context into a brief"
+  default_prompt: "Use $recall to rebuild my recent context for this work."
+
+policy:
+  allow_implicit_invocation: false

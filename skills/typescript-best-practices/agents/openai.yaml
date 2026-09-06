@@ -1,0 +1,7 @@
+interface:
+  display_name: "TypeScript Best Practices"
+  short_description: "Apply TypeScript best practices to source code"
+  default_prompt: "Use $typescript-best-practices to review or edit this TypeScript code."
+
+policy:
+  allow_implicit_invocation: true

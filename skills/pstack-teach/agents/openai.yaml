@@ -1,0 +1,7 @@
+interface:
+  display_name: "pstack Teach"
+  short_description: "Teach a codebase or change through clear explanations"
+  default_prompt: "Use $pstack-teach to teach me this codebase or change."
+
+policy:
+  allow_implicit_invocation: false

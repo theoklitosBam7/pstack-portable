@@ -1,0 +1,7 @@
+interface:
+  display_name: "Outcome-Oriented Execution"
+  short_description: "Reach the target without temporary compatibility code"
+  default_prompt: "Use $principle-outcome-oriented-execution to complete this rewrite toward its target architecture."
+
+policy:
+  allow_implicit_invocation: false

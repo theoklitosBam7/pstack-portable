@@ -1,0 +1,7 @@
+interface:
+  display_name: "Sequence Verifiable Units"
+  short_description: "Break work into small units that prove themselves"
+  default_prompt: "Use $principle-sequence-verifiable-units to plan this work as small verified units."
+
+policy:
+  allow_implicit_invocation: false

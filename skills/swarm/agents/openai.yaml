@@ -1,0 +1,7 @@
+interface:
+  display_name: "Swarm"
+  short_description: "Run parallel workers across independent task slices"
+  default_prompt: "Use $swarm to run parallel workers across this task and return one report."
+
+policy:
+  allow_implicit_invocation: false

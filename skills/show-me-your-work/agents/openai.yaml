@@ -1,0 +1,7 @@
+interface:
+  display_name: "Show Me Your Work"
+  short_description: "Keep a reviewable decision trail for long work"
+  default_prompt: "Use $show-me-your-work to record a reviewable decision trail for this work."
+
+policy:
+  allow_implicit_invocation: false

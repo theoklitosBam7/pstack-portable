@@ -1,0 +1,7 @@
+interface:
+  display_name: "Interrogate"
+  short_description: "Challenge changes with independent adversarial reviews"
+  default_prompt: "Use $interrogate to run an adversarial multi-model review of these changes."
+
+policy:
+  allow_implicit_invocation: false

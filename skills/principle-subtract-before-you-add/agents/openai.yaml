@@ -1,0 +1,7 @@
+interface:
+  display_name: "Subtract Before You Add"
+  short_description: "Remove dead weight before adding new code"
+  default_prompt: "Use $principle-subtract-before-you-add to simplify this code before extending it."
+
+policy:
+  allow_implicit_invocation: false

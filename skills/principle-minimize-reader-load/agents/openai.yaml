@@ -1,0 +1,7 @@
+interface:
+  display_name: "Minimize Reader Load"
+  short_description: "Make code easier to trace and understand"
+  default_prompt: "Use $principle-minimize-reader-load to simplify this code for its readers."
+
+policy:
+  allow_implicit_invocation: false

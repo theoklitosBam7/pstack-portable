@@ -1,0 +1,7 @@
+interface:
+  display_name: "Exhaust the Design Space"
+  short_description: "Compare competing designs before committing"
+  default_prompt: "Use $principle-exhaust-the-design-space to compare competing designs before committing."
+
+policy:
+  allow_implicit_invocation: false

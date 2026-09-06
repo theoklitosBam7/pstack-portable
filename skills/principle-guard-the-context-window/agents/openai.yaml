@@ -1,0 +1,7 @@
+interface:
+  display_name: "Guard the Context Window"
+  short_description: "Keep large payloads out of the main context"
+  default_prompt: "Use $principle-guard-the-context-window to manage context for this large task."
+
+policy:
+  allow_implicit_invocation: false

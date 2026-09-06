@@ -1,0 +1,7 @@
+interface:
+  display_name: "Maintain Verification Skill"
+  short_description: "Keep a project's verification skill accurate"
+  default_prompt: "Use $maintain-verification-skill to audit and correct this project's verification skill."
+
+policy:
+  allow_implicit_invocation: false

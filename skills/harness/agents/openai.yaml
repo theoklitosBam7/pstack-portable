@@ -1,0 +1,7 @@
+interface:
+  display_name: "Harness"
+  short_description: "Adapt pstack operations to the current agent harness"
+  default_prompt: "Use $harness to adapt pstack operations to my current agent harness."
+
+policy:
+  allow_implicit_invocation: true

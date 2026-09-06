@@ -1,0 +1,7 @@
+interface:
+  display_name: "Blast Radius"
+  short_description: "Find and prove the effects of a small change"
+  default_prompt: "Use $blast-radius to find what this change could break and prove its safety."
+
+policy:
+  allow_implicit_invocation: false
