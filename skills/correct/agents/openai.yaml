@@ -1,0 +1,7 @@
+interface:
+  display_name: "Correct"
+  short_description: "Stop agents from repeating the same repo mistakes"
+  default_prompt: "Use $correct to prevent repeated mistakes in this repo."
+
+policy:
+  allow_implicit_invocation: false

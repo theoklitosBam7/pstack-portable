@@ -1,6 +1,6 @@
 # Model config
 
-`/setup-pstack` writes `~/.config/pstack/models`, one `role: model` line per role, and every pstack skill reads it to route subagents. A missing line falls back to the harness adapter's default, and adapters without a different default use the session model. `auto` and `inherit-parent` also mean the session model.
+`/setup-pstack` writes `~/.config/pstack/models`, one `role: model` line per role, with an optional comment that records the reasoning budget. Every pstack skill reads the role lines to route subagents. A missing line falls back to the harness adapter's default, and adapters without a different default use the session model. `auto` and `inherit-parent` also mean the session model.
 
 ## Sub-features
 
@@ -20,7 +20,7 @@ Preconditions:
 - doctor has run this session (its config section is the format and role audit).
 
 - Format and role audit, expect `doctor: ok` or `FAIL` lines with line numbers: `python3 .agents/skills/verify-pstack/verify.py doctor`
-- Role source of truth, expect each configured role name to appear in the setup skill: `rg -n "how critics|arena runners|interrogate reviewers" skills/setup-pstack/SKILL.md`
+- Role source of truth, expect each configured role name to appear in the setup skill: `rg -n "how explorer|arena runners|interrogate reviewers" skills/setup-pstack/SKILL.md`
 - Live resolution, use the active harness's supported model inspection or real subagent invocation, and save the output to evidence. Confirm that `auto` and `inherit-parent` use the current session model and that configured real model IDs are accepted.
 
 ## Gotchas

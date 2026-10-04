@@ -1,0 +1,7 @@
+interface:
+  display_name: "Explain the Number"
+  short_description: "Check what a measured number actually proves"
+  default_prompt: "Use $principle-explain-the-number to assess this measurement."
+
+policy:
+  allow_implicit_invocation: false

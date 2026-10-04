@@ -165,10 +165,13 @@ export interface ResolveGateParams {
   readonly answer: string;
 }
 
-export interface SetFrontierParams {
-  readonly repo: string;
-  readonly prs?: readonly number[];
-}
+export type SetFrontierParams =
+  | { readonly kind: "forge"; readonly prs: readonly FrontierPr[] }
+  | {
+      readonly kind: "graphite";
+      readonly repo: string;
+      readonly pins?: readonly number[];
+    };
 
 export interface AddStandingParams {
   readonly line: string;
@@ -666,6 +669,59 @@ async function readGates(store: string): Promise<readonly Gate[]> {
   return result;
 }
 
+function parseFrontierPrs(
+  value: unknown,
+  source: string
+): readonly FrontierPr[] {
+  if (!isUnknownArray(value)) {
+    throw new UserError(`${source} must contain a PR array`);
+  }
+
+  const prs: FrontierPr[] = [];
+  for (const row of value) {
+    const state = isRecord(row)
+      ? frontierPrStateOrNull(row.state)
+      : null;
+    if (
+      !isRecord(row) ||
+      typeof row.pr !== "number" ||
+      !Number.isSafeInteger(row.pr) ||
+      row.pr < 1 ||
+      typeof row.branches !== "string" ||
+      row.branches.length === 0 ||
+      typeof row.sha !== "string" ||
+      !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/i.test(row.sha) ||
+      state === null
+    ) {
+      throw new UserError(`${source} has an invalid PR row`);
+    }
+    prs.push({
+      pr: row.pr,
+      branches: row.branches,
+      sha: row.sha,
+      state,
+    });
+  }
+
+  if (new Set(prs.map((row) => row.pr)).size !== prs.length) {
+    throw new UserError(`${source} has duplicate PR numbers`);
+  }
+  if (new Set(prs.map((row) => row.branches)).size !== prs.length) {
+    throw new UserError(`${source} has duplicate branches`);
+  }
+  return prs;
+}
+
+export function parseFrontierRecords(raw: string): readonly FrontierPr[] {
+  let value: unknown;
+  try {
+    value = JSON.parse(raw);
+  } catch {
+    throw new UserError("forge frontier data is not valid JSON");
+  }
+  return parseFrontierPrs(value, "forge frontier data");
+}
+
 function parseFrontier(raw: string): Frontier {
   let value: unknown;
   try {
@@ -692,33 +748,9 @@ function parseFrontier(raw: string): Frontier {
   ) {
     throw new UserError("frontier.json has an invalid shape");
   }
-  const prs: FrontierPr[] = [];
-  for (const row of value.prs) {
-    const state = isRecord(row)
-      ? frontierPrStateOrNull(row.state)
-      : null;
-    if (
-      !isRecord(row) ||
-      typeof row.pr !== "number" ||
-      !Number.isSafeInteger(row.pr) ||
-      row.pr < 1 ||
-      typeof row.branches !== "string" ||
-      row.branches.length === 0 ||
-      typeof row.sha !== "string" ||
-      state === null
-    ) {
-      throw new UserError("frontier.json has an invalid PR row");
-    }
-    prs.push({
-      pr: row.pr,
-      branches: row.branches,
-      sha: row.sha,
-      state,
-    });
-  }
   return {
     generation: value.generation,
-    prs,
+    prs: parseFrontierPrs(value.prs, "frontier.json"),
     lowestUnmerged: value.lowestUnmerged,
   };
 }
@@ -1152,7 +1184,7 @@ function branchSha({
     );
   }
   const sha = raw.trim();
-  if (!/^[0-9a-f]{40,64}$/i.test(sha)) {
+  if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/i.test(sha)) {
     throw new UserError(`git rev-parse ${branch} returned an invalid SHA`);
   }
   return sha;
@@ -1483,21 +1515,31 @@ export function openStore(
     frontier: {
       set: async (params) => {
         await beginWrite();
-        const repo = resolve(requiredLine(params.repo, "repo directory"));
-        const pin =
-          params.prs === undefined
-            ? undefined
-            : params.prs.map((pr) => positiveInteger(pr, "PR"));
-        if (pin !== undefined && new Set(pin).size !== pin.length) {
-          throw new UserError("--prs must not contain duplicates");
-        }
         const old = await readFrontier(store);
-        const prs = resolveFrontier(repo);
-        if (pin !== undefined) {
-          validateFrontierPin({
-            actual: prs.map((row) => row.pr),
-            expected: pin,
-          });
+        let prs: readonly FrontierPr[];
+        switch (params.kind) {
+          case "forge":
+            prs = params.prs;
+            break;
+          case "graphite":
+            prs = resolveFrontier(
+              resolve(requiredLine(params.repo, "repo directory"))
+            );
+            if (params.pins !== undefined) {
+              const pins = params.pins.map((pr) => positiveInteger(pr, "PR"));
+              if (new Set(pins).size !== pins.length) {
+                throw new UserError("--prs must not contain duplicates");
+              }
+              validateFrontierPin({
+                actual: prs.map((row) => row.pr),
+                expected: pins,
+              });
+            }
+            break;
+          default: {
+            const _exhaustive: never = params;
+            throw _exhaustive;
+          }
         }
         const value: Frontier = {
           generation: old.generation + 1,

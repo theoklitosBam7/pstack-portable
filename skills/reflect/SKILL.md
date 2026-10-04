@@ -10,19 +10,13 @@ Mine the current conversation for durable learnings, then route them into skill 
 
 ## When to invoke
 
-- The user said "reflect" or "/reflect".
-- A complex task (5+ tool calls) just landed cleanly and the recipe is worth keeping.
-- The agent hit dead ends, found the working path, and the path generalizes.
-- The user corrected the agent's approach mid-task.
-- A non-trivial workflow emerged that isn't captured anywhere.
-
-Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.
+Invoke when the user says "reflect" or "/reflect". Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.
 
 ## Process
 
 ### 1. Locate the active transcript
 
-The parent finds its own transcript file before fanning out, with the find-transcripts operation in the **harness** skill. Stay inside the active workspace. Reading another project's transcripts crosses workspace boundaries and reads private chats from unrelated projects.
+The parent finds its own transcript file before fanning out, with the find-transcripts operation in the **harness** skill. Stay inside the active workspace. Reading another project's transcripts crosses workspace boundaries and reads private chats from unrelated projects. If the harness cannot provide readable transcripts, pass a tight digest instead.
 
 ```bash
 ls -t <transcripts-dir>/*.jsonl <transcripts-dir>/*/*.jsonl <transcripts-dir>/*/subagents/*.jsonl 2>/dev/null | head -10
@@ -34,29 +28,29 @@ For each candidate, read the first JSONL line and check that `message.content[0]
 
 ### 2. Spawn three reviewers in parallel
 
-One message, three subagents with explicit model roles from the pstack model config, per the **harness** skill, in agent mode. Reviewers need MCP access for context lookups, tickets, chat threads, observability traces referenced in the transcript, where the harness strips MCPs in readonly mode. The prompt forbids file writes; the parent applies edits.
+One message, three subagents with explicit model roles from `~/.config/pstack/models`, per the **harness** skill, in agent mode. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript). The prompt forbids file writes; the parent applies edits.
 
 | Lens | Model role | Prompt template |
 |---|---|---|
-| Judgment | the `reflect judgment` role from the pstack model config, adapter default otherwise | `references/judgment-reviewer.md` |
-| Tooling | the `reflect tooling` role from the pstack model config, adapter default otherwise | `references/tooling-reviewer.md` |
-| Divergent | the `reflect judgment` role from the pstack model config, adapter default otherwise | `references/divergent-reviewer.md` |
+| Judgment | the `reflect judgment` role from the model config, adapter default otherwise | `references/judgment-reviewer.md` |
+| Tooling | the `reflect tooling` role from the model config, adapter default otherwise | `references/tooling-reviewer.md` |
+| Divergent | the `reflect judgment` role from the model config, adapter default otherwise | `references/divergent-reviewer.md` |
 
 Pass each template verbatim, substituting the transcript path or digest where marked. Reviewers return findings in their response.
 
 ### 3. Synthesize
 
-One subagent, using the `reflect judgment` role from the pstack model config, adapter default otherwise, in agent mode per the **harness** skill. The synthesizer's quality check includes spot-verifying citations, which can require MCP access. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
+One subagent, using the `reflect judgment` role from `~/.config/pstack/models`, adapter default otherwise, in agent mode per the **harness** skill. The synthesizer's quality check includes spot-verifying citations, which can require MCP access. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
 
 ### 4. Structural enforcement check
 
-Sanity-check the synthesizer's Accepted list. For any item that would be enforced more reliably by a lint rule, script, metadata flag, or runtime check, move it from Accepted to Backlog. The synthesizer already applies this criterion; this is a final pass before edits land. See the **encode-lessons-in-structure** principle skill.
+Sanity-check the synthesizer's Accepted list. For any item that would be enforced more reliably by a lint rule, script, metadata flag, or runtime check, move it from Accepted to Backlog. See the **encode-lessons-in-structure** principle skill.
 
 ### 5. Apply
 
-Before applying any Accepted edit, present the synthesizer's full Accepted/Rejected/Backlog output to the user and wait for explicit approval. The user picks which subset to apply and may redirect routings. Skill changes affect every future agent in the org; do not auto-apply.
+Before applying any Accepted edit, present the synthesizer's full Accepted/Rejected/Backlog output to the user and wait for explicit approval. The user picks which subset to apply and may redirect routings. Skill changes affect every future agent in the org. Do not auto-apply.
 
-Backlog items file to whatever devex / backlog tracker your team uses automatically. Those are tracker submissions, not skill edits. Only the Accepted list waits for approval.
+Backlog items file to whatever devex / backlog tracker your team uses automatically. Only the Accepted list waits for approval.
 
 For each approved Accepted item, follow the Routing field exactly:
 

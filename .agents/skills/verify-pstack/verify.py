@@ -24,13 +24,13 @@ PSTACK_SOURCE = "theoklitosBam7/pstack-portable"
 
 KNOWN_ROLES = {
     "code", "fast", "judgment", "hardest",
-    "how explorer", "how explainer", "how critics",
+    "how explorer", "how explainer",
     "why investigators", "why synthesizer",
     "reflect tooling", "reflect judgment",
     "arena runners", "arena cross-judge pool",
     "swarm workers", "architect runners", "interrogate reviewers",
     # legacy names that map onto code or hardest
-    "bug-fix", "feature", "refactoring",
+    "bug-fix", "feature", "refactoring", "perf-issue", "hillclimb",
 }
 
 ROLE_LINE = re.compile(r"^([A-Za-z][A-Za-z -]*?):\s*(.+?)\s*$")

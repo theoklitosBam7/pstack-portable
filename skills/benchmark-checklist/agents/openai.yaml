@@ -1,0 +1,7 @@
+interface:
+  display_name: "Benchmark Checklist"
+  short_description: "Check a performance measurement before using its result"
+  default_prompt: "Use $benchmark-checklist to check this performance measurement."
+
+policy:
+  allow_implicit_invocation: false
