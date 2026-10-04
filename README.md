@@ -24,7 +24,7 @@ the official skills cli is the quickest way:
 npx skills@latest add theoklitosBam7/pstack-portable
 ```
 
-it finds every SKILL.md in this repo, asks which ones to install and for which agents, and symlinks them into each agent's skill directory. add `-g` to install user-level, `-y` to skip prompts, or `--all` to take everything. later, `npx skills update` pulls new versions.
+it finds every SKILL.md in this repo, asks which ones to install and for which agents, and symlinks them into each agent's skill directory. add `-g` to install user-level, `-s '*'` to take every skill without prompting, and `-y` to skip the remaining prompts. to install from a branch or tag instead of the default branch, pin a ref with a fragment: `npx skills@latest add theoklitosBam7/pstack-portable#<ref>`. later, `npx skills update` pulls new versions.
 
 install all of them, not a subset. `poteto-mode` routes to the other skills by name, and a missing one breaks a step.
 
