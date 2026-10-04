@@ -5,7 +5,7 @@
 ## Sub-features
 
 - `config-format`: every non-comment line parses as `role: value`.
-- `config-roles`: role names come from the table in `skills/setup-pstack/SKILL.md`.
+- `config-roles`: role names come from the table in `skills/setup-pstack/SKILL.md`. The checker also accepts legacy aliases (`bug-fix`, `feature`, `refactoring`, `perf-issue`, `hillclimb`) that the table does not list.
 - `config-resolve`: panel values may be comma-separated lists; `auto` and `inherit-parent` entries are always legal.
 
 ## How to get to it (user POV)
