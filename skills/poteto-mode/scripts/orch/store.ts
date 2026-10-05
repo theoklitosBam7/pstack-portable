@@ -1519,7 +1519,7 @@ export function openStore(
         let prs: readonly FrontierPr[];
         switch (params.kind) {
           case "forge":
-            prs = params.prs;
+            prs = parseFrontierPrs(params.prs, "forge frontier data");
             break;
           case "graphite":
             prs = resolveFrontier(
