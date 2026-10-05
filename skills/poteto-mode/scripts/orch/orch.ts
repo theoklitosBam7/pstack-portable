@@ -221,7 +221,7 @@ function storeDirectory(program: Command): string {
 }
 
 function frontierRepo(options: FrontierSetOptions): string {
-  const value = options.repo;
+  const value = options.repo ?? process.env.ORCH_REPO;
   if (value === undefined || value.trim().length === 0) {
     throw new UsageError("set --repo <dir> or ORCH_REPO");
   }
@@ -527,10 +527,7 @@ function createProgram(io: Io): Command {
     .action(() => requireSubcommand(program));
   leaf(frontier, "set", "set the frontier from forge data or Graphite")
     .addOption(
-      new Option(
-        "--repo <dir>",
-        "repository directory (or ORCH_REPO)"
-      ).env("ORCH_REPO")
+      new Option("--repo <dir>", "repository directory (or ORCH_REPO)")
     )
     .option(
       "--prs <n,...>",
