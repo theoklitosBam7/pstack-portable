@@ -484,6 +484,29 @@ describe("Store", () => {
     });
   });
 
+  it("rejects invalid forge records without changing the frontier", async () => {
+    const { store } = await initializedStore();
+
+    await expect(
+      store.frontier.set({
+        kind: "forge",
+        prs: [
+          {
+            pr: 41,
+            branches: "feature/first",
+            sha: "1".repeat(41),
+            state: "OPEN",
+          },
+        ],
+      })
+    ).rejects.toThrow("forge frontier data has an invalid PR row");
+    expect(await store.frontier.show()).toEqual({
+      generation: 0,
+      prs: [],
+      lowestUnmerged: null,
+    });
+  });
+
   it("rejects unparseable Graphite output loudly", async () => {
     const { directory, store } = await initializedStore();
     const stack = await makeGitStack(directory);
@@ -592,14 +615,17 @@ describe("orch CLI", () => {
     );
     expect(runCli(["--store", storePath, "init"]).code).toBe(0);
 
-    const set = runCli([
-      "--store",
-      storePath,
-      "frontier",
-      "set",
-      "--data",
-      dataPath,
-    ]);
+    const set = runCli(
+      [
+        "--store",
+        storePath,
+        "frontier",
+        "set",
+        "--data",
+        dataPath,
+      ],
+      { ...process.env, ORCH_REPO: join(directory, "legacy-repo") }
+    );
     expect(set.code).toBe(0);
 
     const shown = runCli([
