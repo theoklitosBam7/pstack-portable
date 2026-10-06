@@ -1,0 +1,7 @@
+interface:
+  display_name: "Test Behavior, Not Implementation"
+  short_description: "Test observable behavior instead of internal calls"
+  default_prompt: "Use $principle-test-behavior-not-implementation to assess this test."
+
+policy:
+  allow_implicit_invocation: false

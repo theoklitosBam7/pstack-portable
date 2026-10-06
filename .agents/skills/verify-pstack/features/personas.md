@@ -21,7 +21,7 @@ Preconditions:
 
 - Frontmatter and link audit, expect `check: ok` (it covers `agents/*.md`): `python3 .agents/skills/verify-pstack/verify.py check`
 - Install drift check. If `~/.pi/agent/agents/poteto-agent.md` exists, expect no output: `diff ~/.pi/agent/agents/poteto-agent.md agents/poteto-agent.md` (same for `comment-sicko.md`).
-- If the persona directory does not exist, record `verified-unreachable: persona not installed; inline path is the live route` and prove the inline route instead: the cold load of a skill in `skill-load.md` shows the body a brief would inline is complete.
+- Check per file. If an installed copy exists, diff it against the checkout. If a persona file is absent from the persona directory (the directory itself can exist without the files), record `verified-unreachable: <persona> not installed; inline path is the live route` and prove the inline route instead: the cold load of a skill in `skill-load.md` shows the body a brief would inline is complete.
 
 ## Gotchas
 

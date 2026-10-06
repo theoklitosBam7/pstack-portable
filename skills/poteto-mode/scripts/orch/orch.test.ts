@@ -419,7 +419,9 @@ describe("Store", () => {
       directory,
       output,
       operation: async () => {
-        expect(await store.frontier.set({ repo: stack.repo })).toEqual({
+        expect(
+          await store.frontier.set({ kind: "graphite", repo: stack.repo })
+        ).toEqual({
           generation: 1,
           prs: [
             {
@@ -446,35 +448,62 @@ describe("Store", () => {
         expect(
           (
             await store.frontier.set({
+              kind: "graphite",
               repo: stack.repo,
-              prs: [10, 13, 11],
+              pins: [10, 13, 11],
             })
           ).generation
         ).toBe(2);
         expect((await store.frontier.show()).generation).toBe(2);
         await expect(
           store.frontier.set({
+            kind: "graphite",
             repo: stack.repo,
-            prs: [10, 11, 12],
+            pins: [10, 11, 12],
           })
         ).rejects.toThrow(
           "frontier pin mismatch: missing from gt: 12; extra in gt: 13"
         );
         await expect(
           store.frontier.set({
+            kind: "graphite",
             repo: stack.repo,
-            prs: [13, 10, 11],
+            pins: [13, 10, 11],
           })
         ).rejects.toThrow(
           "frontier pin mismatch: order differs: expected 13,10,11; gt 10,13,11"
         );
         await expect(
           store.frontier.set({
+            kind: "graphite",
             repo: stack.repo,
-            prs: [10, 10],
+            pins: [10, 10],
           })
         ).rejects.toThrow("--prs must not contain duplicates");
       },
+    });
+  });
+
+  it("rejects invalid forge records without changing the frontier", async () => {
+    const { store } = await initializedStore();
+
+    await expect(
+      store.frontier.set({
+        kind: "forge",
+        prs: [
+          {
+            pr: 41,
+            branches: "feature/first",
+            sha: "1".repeat(41),
+            state: "OPEN",
+          },
+        ],
+      })
+    ).rejects.toThrow("forge frontier data has an invalid PR row");
+    expect(await store.frontier.show()).toEqual({
+      generation: 0,
+      prs: [],
+      lowestUnmerged: null,
     });
   });
 
@@ -487,7 +516,7 @@ describe("Store", () => {
       output: "◯ main\nthis line is not Graphite output\n",
       operation: async () => {
         await expect(
-          store.frontier.set({ repo: stack.repo })
+          store.frontier.set({ kind: "graphite", repo: stack.repo })
         ).rejects.toThrow(
           'gt log short output has an unparseable line 2: "this line is not Graphite output"'
         );
@@ -549,11 +578,129 @@ describe("orch CLI", () => {
     expect(frontierHelp.code).toBe(0);
     expect(frontierHelp.stdout).toContain("--repo <dir>");
     expect(frontierHelp.stdout).toContain("--prs <n,...>");
+    expect(frontierHelp.stdout).toContain("--data <path>");
 
     const directory = await makeDirectory();
     const invalid = runCli(["--store", directory, "unit", "add", "u1"]);
     expect(invalid.code).toBe(1);
     expect(invalid.stderr).toContain("required option '--track <track>'");
+  });
+
+  it("sets and reads an ordered frontier from forge data", async () => {
+    const directory = await makeDirectory();
+    const storePath = join(directory, "store");
+    const dataPath = join(directory, "frontier-input.json");
+    await writeFile(
+      dataPath,
+      JSON.stringify([
+        {
+          pr: 41,
+          branches: "feature/first",
+          sha: "1111111111111111111111111111111111111111",
+          state: "MERGED",
+        },
+        {
+          pr: 42,
+          branches: "feature/second",
+          sha: "2222222222222222222222222222222222222222",
+          state: "OPEN",
+        },
+        {
+          pr: 43,
+          branches: "feature/third",
+          sha: "3333333333333333333333333333333333333333",
+          state: "CLOSED",
+        },
+      ])
+    );
+    expect(runCli(["--store", storePath, "init"]).code).toBe(0);
+
+    const set = runCli(
+      [
+        "--store",
+        storePath,
+        "frontier",
+        "set",
+        "--data",
+        dataPath,
+      ],
+      { ...process.env, ORCH_REPO: join(directory, "legacy-repo") }
+    );
+    expect(set.code).toBe(0);
+
+    const shown = runCli([
+      "--store",
+      storePath,
+      "--json",
+      "frontier",
+      "show",
+    ]);
+    expect(JSON.parse(shown.stdout)).toEqual({
+      generation: 1,
+      prs: [
+        {
+          pr: 41,
+          branches: "feature/first",
+          sha: "1111111111111111111111111111111111111111",
+          state: "MERGED",
+        },
+        {
+          pr: 42,
+          branches: "feature/second",
+          sha: "2222222222222222222222222222222222222222",
+          state: "OPEN",
+        },
+        {
+          pr: 43,
+          branches: "feature/third",
+          sha: "3333333333333333333333333333333333333333",
+          state: "CLOSED",
+        },
+      ],
+      lowestUnmerged: 42,
+    });
+  });
+
+  it("rejects an invalid SHA without changing the frontier", async () => {
+    const directory = await makeDirectory();
+    const storePath = join(directory, "store");
+    const dataPath = join(directory, "frontier-input.json");
+    await writeFile(
+      dataPath,
+      JSON.stringify([
+        {
+          pr: 41,
+          branches: "feature/first",
+          sha: "1".repeat(41),
+          state: "OPEN",
+        },
+      ])
+    );
+    expect(runCli(["--store", storePath, "init"]).code).toBe(0);
+
+    const set = runCli([
+      "--store",
+      storePath,
+      "frontier",
+      "set",
+      "--data",
+      dataPath,
+    ]);
+    expect(set.code).toBe(1);
+    expect(set.stderr).toContain("forge frontier data has an invalid PR row");
+
+    const shown = runCli([
+      "--store",
+      storePath,
+      "--json",
+      "frontier",
+      "show",
+    ]);
+    expect(JSON.parse(shown.stdout)).toEqual({
+      generation: 0,
+      prs: [],
+      lowestUnmerged: null,
+    });
   });
 
   it("accepts ORCH_STORE and emits complete JSON", async () => {

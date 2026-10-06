@@ -1,0 +1,7 @@
+interface:
+  display_name: "Attack the Premise"
+  short_description: "Question an assumption after repeated fixes fail"
+  default_prompt: "Use $principle-attack-the-premise to examine this repeated failure."
+
+policy:
+  allow_implicit_invocation: false

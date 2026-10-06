@@ -20,7 +20,7 @@ User-level mirror: `~/.cursor/rules/pstack-models.mdc` with `alwaysApply: true`.
 
 ## Default model roles
 
-Configured lines win. Without config, roles resolve to Cursor slugs: `code` = `claude-fable-5-1-thinking-max`, `fast` = `grok-4.6-fast-xhigh`, `judgment` = `claude-fable-5-1-thinking-max`, `hardest` = `claude-fable-5-1-thinking-max`. Panel defaults: `how critics`, `arena runners`, `arena cross-judge pool`, `architect runners`, `interrogate reviewers` = `claude-fable-5-1-thinking-max`, `gpt-5.6-sol-max`, `grok-4.6-fast-xhigh`, `claude-opus-5-thinking-xhigh`. `how explorer` and `why investigators` and `swarm workers` = `grok-4.6-fast-xhigh`. `how explainer`, `why synthesizer`, `reflect judgment` = `claude-fable-5-1-thinking-max`. `reflect tooling` = `gpt-5.6-sol-max`. Playbook lines map: `bug-fix`, `perf-issue`, `hillclimb`, `hardest tasks` = `claude-fable-5-1-thinking-max`, the judgment role, per the poteto-mode tiering rule.
+Configured lines win. Without config, `code` and `fast` use `grok-4.7-xhigh-fast`; `judgment` and `hardest` use `claude-opus-5-5-max`. `arena runners`, `arena cross-judge pool`, `architect runners`, and `interrogate reviewers` use `claude-opus-5-5-max`, `gpt-5.6-sol-max`, and `grok-4.7-xhigh-fast`. `how explorer`, `why investigators`, and `swarm workers` use `grok-4.7-xhigh-fast`. `how explainer`, `why synthesizer`, and `reflect judgment` use `claude-opus-5-5-max`. `reflect tooling` uses `gpt-5.6-sol-max`. Playbook lines map: `feature`, `refactoring`, `bug-fix`, `perf-issue`, and `hillclimb` use the `code` role; `hardest tasks` use the `hardest` role.
 
 ## Notes
 

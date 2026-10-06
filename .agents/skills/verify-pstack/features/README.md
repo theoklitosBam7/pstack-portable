@@ -13,9 +13,9 @@ This directory is the maintained source for verifying the user-facing behavior o
 ## Driving conventions
 
 - Treat every command as literal. Keep quoted names and flags unchanged.
-- Static checks run through `verify.py`. Live drives spawn a cold subagent per the harness skill's spawn-subagent operation; on pi that is the `subagent` tool's `runs.run`.
+- Static checks run through `verify.py`. Live drives spawn a cold subagent per the harness skill's spawn-subagent operation; on pi that is the installed subagent extension's `agent` plus `task` fields.
 - A live brief never names this verification run, the word "verify", or this feature map. The subagent reads the target file cold, exactly as a harness session would.
-- Quote checks use `rg -F` against the real file. A paraphrase proves nothing.
+- Quote checks use `rg -F` against the real file. A paraphrase proves nothing. When the description line carries yaml escapes, prove the quote against the yaml-parsed value instead; the recipe lives in [skill-load](./skill-load.md).
 - Report an unreachable path with the attempted command and the unmet precondition.
 
 ## Proof and skip reporting

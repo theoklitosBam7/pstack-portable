@@ -1,10 +1,12 @@
 #!/usr/bin/env bun
 
+import { readFile } from "node:fs/promises";
 import { ensureDependenciesInstalled } from "../bootstrap.ts";
 import {
   NotFoundError,
   UsageError,
   openStore,
+  parseFrontierRecords,
   parseVerdict,
   type Counts,
   type Frontier,
@@ -13,6 +15,7 @@ import {
   type StandingLine,
   type StatusReport,
   type Store,
+  type SetFrontierParams,
   type Unit,
   type Verdict,
 } from "./store.ts";
@@ -82,7 +85,16 @@ interface GateResolveOptions {
 interface FrontierSetOptions {
   readonly repo?: string;
   readonly prs?: readonly number[];
+  readonly data?: string;
 }
+
+type FrontierSetSource =
+  | { readonly kind: "forge"; readonly dataPath: string }
+  | {
+      readonly kind: "graphite";
+      readonly repo: string;
+      readonly pins?: readonly number[];
+    };
 
 function message(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
@@ -209,11 +221,50 @@ function storeDirectory(program: Command): string {
 }
 
 function frontierRepo(options: FrontierSetOptions): string {
-  const value = options.repo;
+  const value = options.repo ?? process.env.ORCH_REPO;
   if (value === undefined || value.trim().length === 0) {
     throw new UsageError("set --repo <dir> or ORCH_REPO");
   }
   return value;
+}
+
+function frontierSource(options: FrontierSetOptions): FrontierSetSource {
+  if (options.data !== undefined) {
+    if (options.data.trim().length === 0) {
+      throw new UsageError("frontier data path must not be empty");
+    }
+    if (options.repo !== undefined || options.prs !== undefined) {
+      throw new UsageError("--data cannot be combined with --repo or --prs");
+    }
+    return { kind: "forge", dataPath: options.data };
+  }
+  return {
+    kind: "graphite",
+    repo: frontierRepo(options),
+    pins: options.prs,
+  };
+}
+
+async function frontierParams(
+  options: FrontierSetOptions
+): Promise<SetFrontierParams> {
+  const source = frontierSource(options);
+  if (source.kind === "forge") {
+    let raw: string;
+    try {
+      raw = await readFile(source.dataPath, "utf8");
+    } catch (error) {
+      throw new UsageError(
+        `cannot read frontier data ${source.dataPath}: ${message(error)}`
+      );
+    }
+    return { kind: "forge", prs: parseFrontierRecords(raw) };
+  }
+  return {
+    kind: "graphite",
+    repo: source.repo,
+    pins: source.pins,
+  };
 }
 
 async function runStore<T>(
@@ -472,32 +523,27 @@ function createProgram(io: Io): Command {
 
   const frontier = program
     .command("frontier")
-    .description("manage the Graphite stack frontier")
+    .description("manage the stack frontier")
     .action(() => requireSubcommand(program));
-  leaf(frontier, "set", "discover the Graphite stack and set the frontier")
+  leaf(frontier, "set", "set the frontier from forge data or Graphite")
     .addOption(
-      new Option(
-        "--repo <dir>",
-        "repository directory (or ORCH_REPO)"
-      ).env("ORCH_REPO")
+      new Option("--repo <dir>", "repository directory (or ORCH_REPO)")
     )
     .option(
       "--prs <n,...>",
       "optional expected pull request order pin",
       prList
     )
-    .action((options: FrontierSetOptions) =>
-      runStore(
+    .option("--data <path>", "ordered PR records from the resolved forge")
+    .action(async (options: FrontierSetOptions) => {
+      const params = await frontierParams(options);
+      return runStore(
         program,
         io,
-        (store) =>
-          store.frontier.set({
-            repo: frontierRepo(options),
-            prs: options.prs,
-          }),
+        (store) => store.frontier.set(params),
         frontierLine
-      )
-    );
+      );
+    });
   leaf(frontier, "show", "show the frontier").action(() =>
     runStore(program, io, (store) => store.frontier.show(), frontierLine)
   );
