@@ -1,11 +1,11 @@
 ---
 name: setup-pstack
-description: Configure which models pstack uses for each role and set a reasoning budget. Detects models available in the active harness and writes the portable model config. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
+description: Configure which models pstack uses for each role and set a reasoning budget. Detects models available in the active harness and writes a harness-specific model config. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
 ---
 
 # Setup pstack
 
-Write the pstack model config at `~/.config/pstack/models`. Use one line per role. Map each role to a model available in the active harness. The skills read this file and use adapter defaults for roles without a line.
+Write the pstack model config at `~/.config/pstack/<harness>/models`. Resolve `<harness>` through the **harness** skill and use the exact Model config path from the active adapter. Use one line per role. Map each role to a model available in the active harness. The skills read this file and use adapter defaults for roles without a line.
 
 ## Steps
 
@@ -19,7 +19,7 @@ Use the active harness to list models that subagents can use. Check the adapter 
 
 ### 3. Load the current state
 
-Read `~/.config/pstack/models` if it exists. Keep its role values and the recorded budget as the current choices. Otherwise use the role defaults in the **harness** skill and the active adapter.
+Read `~/.config/pstack/<harness>/models` if it exists. Keep its role values and the recorded budget as the current choices. Otherwise use the role defaults in the **harness** skill and the active adapter. Ignore the old shared file at `~/.config/pstack/models`; leave it and other harnesses' configs untouched.
 
 The `how critics` role is no longer used. When the current config has that line, report it as retired and omit it from the new config.
 
@@ -50,7 +50,7 @@ Ask whether the user accepts the table or wants to change specific roles. Offer 
 
 Check that every real model ID is in the detected list. `inherit-parent` and `auto` are valid aliases. If an ID is unavailable, stop and ask the user to choose again.
 
-Write `~/.config/pstack/models`, one line per role. Overwrite the file so reruns remove retired roles and stay idempotent. Record the selected budget in a comment. The comment is not a model role.
+Create the active config's parent directory if needed. Write `~/.config/pstack/<harness>/models`, one line per role. Overwrite the file so reruns remove retired roles and stay idempotent. Record the selected budget in a comment. The comment is not a model role.
 
 ```text
 # pstack model configuration. Delete a role line to use its adapter default.
@@ -82,10 +82,10 @@ alwaysApply: true
 ---
 ```
 
-On other harnesses, use the exact user-level instruction file named in the adapter's Config section. Preserve its existing instructions. Add this line once, or update the existing pstack config instruction:
+On other harnesses, use the exact user-level instruction file named in the adapter's Config section. Preserve its existing instructions. Add this line once, or update the existing pstack config instruction, including an old shared-path instruction. Replace `<harness>` with the active adapter name before writing the line:
 
 ```text
-Before selecting models for pstack roles, read `~/.config/pstack/models` if it exists.
+Before selecting models for pstack roles, read `~/.config/pstack/<harness>/models` if it exists.
 ```
 
 ### 7. Confirm the result

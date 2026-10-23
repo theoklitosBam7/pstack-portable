@@ -1,9 +1,12 @@
 # Model config
 
-`/setup-pstack` writes `~/.config/pstack/models`, one `role: model` line per role, with an optional comment that records the reasoning budget. Every pstack skill reads the role lines to route subagents. A missing line falls back to the harness adapter's default, and adapters without a different default use the session model. `auto` and `inherit-parent` also mean the session model.
+`/setup-pstack` writes `~/.config/pstack/<harness>/models`, one `role: model` line per role, with an optional comment that records the reasoning budget. Every pstack skill reads the role lines to route subagents. A missing line falls back to the harness adapter's default, and adapters without a different default use the session model. `auto` and `inherit-parent` also mean the session model.
+
+`<harness>` is the adapter filename without `.md`, such as `pi` or `codex`. Each harness reads only its own config. The old shared `~/.config/pstack/models` file is ignored and left untouched.
 
 ## Sub-features
 
+- `config-isolation`: each adapter names its own config path; the checker validates every existing supported harness config and ignores the old shared file.
 - `config-format`: every non-comment line parses as `role: value`.
 - `config-roles`: role names come from the table in `skills/setup-pstack/SKILL.md`. The checker also accepts legacy aliases (`bug-fix`, `feature`, `refactoring`, `perf-issue`, `hillclimb`) that the table does not list.
 - `config-resolve`: panel values may be comma-separated lists; `auto` and `inherit-parent` entries are always legal.

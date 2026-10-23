@@ -19,7 +19,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[3]
 INSTALL = Path.home() / ".agents" / "skills"
 LOCK = Path.home() / ".agents" / ".skill-lock.json"
-CONFIG = Path.home() / ".config" / "pstack" / "models"
+CONFIG_ROOT = Path.home() / ".config" / "pstack"
 PSTACK_SOURCE = "theoklitosBam7/pstack-portable"
 
 KNOWN_ROLES = {
@@ -114,6 +114,36 @@ def validate_skill_lock(skill_names, failures, notes):
     return False
 
 
+def validate_model_configs(failures, warnings, notes):
+    configs = [
+        CONFIG_ROOT / adapter.stem / "models"
+        for adapter in sorted((REPO / "skills" / "harness" / "references").glob("*.md"))
+    ]
+    for config in configs:
+        if not config.exists():
+            notes.append(f"config: {config} absent; use this harness's mirror or adapter defaults")
+            continue
+        for i, line in enumerate(config.read_text().splitlines(), 1):
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+            match = ROLE_LINE.match(stripped)
+            if not match:
+                failures.append(f"config: {config}:{i} is not 'role: value': {stripped!r}")
+                continue
+            role, value = match.group(1).strip(), match.group(2).strip()
+            if role not in KNOWN_ROLES:
+                failures.append(f"config: {config}:{i} names unknown role {role!r}")
+            entries = [entry.strip() for entry in value.split(",")]
+            for entry in entries:
+                if not entry:
+                    failures.append(f"config: {config}:{i} has an empty list entry")
+                elif entry not in ("auto", "inherit-parent") and "/" not in entry:
+                    warnings.append(
+                        f"config: {config}:{i} entry {entry!r} has no provider/ prefix; confirm it spawns in this harness"
+                    )
+
+
 def cmd_doctor():
     failures, warnings, notes = [], [], []
 
@@ -158,35 +188,15 @@ def cmd_doctor():
             if under(REPO, target) and not target.exists():
                 failures.append(f"install: {link} -> {target} is dangling")
 
-    if not CONFIG.exists():
-        notes.append("config: ~/.config/pstack/models absent; every role runs on the session model")
-    else:
-        for i, line in enumerate(CONFIG.read_text().splitlines(), 1):
-            stripped = line.strip()
-            if not stripped or stripped.startswith("#"):
-                continue
-            m = ROLE_LINE.match(stripped)
-            if not m:
-                failures.append(f"config: line {i} is not 'role: value': {stripped!r}")
-                continue
-            role, value = m.group(1).strip(), m.group(2).strip()
-            if role not in KNOWN_ROLES:
-                failures.append(f"config: line {i} names unknown role {role!r}")
-            entries = [e.strip() for e in value.split(",")]
-            for entry in entries:
-                if not entry:
-                    failures.append(f"config: line {i} has an empty list entry")
-                elif entry not in ("auto", "inherit-parent") and "/" not in entry:
-                    warnings.append(
-                        f"config: line {i} entry {entry!r} has no provider/ prefix; confirm it spawns in this harness"
-                    )
+    validate_model_configs(failures, warnings, notes)
 
+    pi_config = "~/.config/pstack/pi/models"
     for cand in (Path.home() / ".pi" / "agent" / "AGENTS.md", REPO / "AGENTS.md", Path.cwd() / "AGENTS.md"):
-        if cand.exists() and "pstack/models" in cand.read_text():
-            notes.append(f"pointer: {cand} names the config path")
+        if cand.exists() and pi_config in cand.read_text():
+            notes.append(f"pointer: {cand} names the pi config path")
             break
     else:
-        notes.append("pointer: no AGENTS.md names the config path; fresh sessions may miss ~/.config/pstack/models")
+        notes.append(f"pointer: no AGENTS.md names the pi config path; fresh pi sessions may miss {pi_config}")
 
     finish("doctor", failures, warnings, notes)
 

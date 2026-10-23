@@ -31,9 +31,11 @@ After detection, read `references/<harness>.md` from this skill and apply it for
 
 Skills name roles, never model ids. Roles resolve in this order:
 
-1. `~/.config/pstack/models`, the portable config written by `/setup-pstack`. One line per role, `role: model` or a comma-separated panel list.
+1. `~/.config/pstack/<harness>/models`, the active harness's config written by `/setup-pstack`. Replace `<harness>` with the adapter filename without `.md`, such as `pi`, `codex`, or `claude-code`. The adapter's Config section gives the exact path. One line per role, `role: model` or a comma-separated panel list.
 2. The harness mirror named in the adapter. Cursor mirrors to `~/.cursor/rules/pstack-models.mdc` so the choices inject every session.
 3. The adapter's defaults.
+
+Read only the active harness's config and mirror. Ignore the old shared file at `~/.config/pstack/models` and other harnesses' configs. If the active config is absent, use its mirror or adapter defaults, not the shared file.
 
 A role that resolves to nothing runs on the session model. The value `inherit-parent` or `auto` also means the session model. When a multi-model panel collapses to one model because the harness cannot spawn per-subagent models, say so in the reply. The panel still runs, sequentially if it must.
 
@@ -65,4 +67,4 @@ The `$PWD` prefix matters: `ln` stores the source text verbatim as the link's ta
 
 Keep the checkout intact. Skills reference their own files and sibling skills by relative path, so the symlinks must point into this tree rather than copying files out of it.
 
-After installation, run [setup-pstack](../setup-pstack/SKILL.md#6-write-the-config) to choose models for pstack roles and save them in `~/.config/pstack/models`. Step 6 adds a config-reading instruction to the user-level file named in your adapter, or writes the Cursor mirror. This makes the model choices available to later sessions across projects. Skill and persona use follows the relevant skill instructions.
+After installation, run [setup-pstack](../setup-pstack/SKILL.md#6-write-the-config) to choose models for pstack roles and save them in `~/.config/pstack/<harness>/models`. Step 6 adds a config-reading instruction to the user-level file named in your adapter, or writes the Cursor mirror. This makes the model choices available to later sessions across projects. Skill and persona use follows the relevant skill instructions.

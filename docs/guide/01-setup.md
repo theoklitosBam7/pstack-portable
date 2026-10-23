@@ -22,7 +22,7 @@ Run:
 /setup-pstack
 ```
 
-[`/setup-pstack`](../../skills/setup-pstack/SKILL.md) detects the harness and the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. It writes `~/.config/pstack/models`, a portable config every pstack skill reads.
+[`/setup-pstack`](../../skills/setup-pstack/SKILL.md) detects the harness and the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. It writes `~/.config/pstack/<harness>/models`, the config every pstack skill reads for the active harness. `<harness>` is the adapter name, such as `codex` or `pi`. Run setup in each harness you use. The old shared `~/.config/pstack/models` file is ignored and left untouched.
 
 You only override what you care about. A role with no line in the config keeps the harness's current default. To restore a default, delete that role's line. Existing model choices stay in place when defaults change. To pick from the current defaults, delete the old role lines or the whole file, then run `/setup-pstack` again.
 

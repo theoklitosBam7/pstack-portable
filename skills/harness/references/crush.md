@@ -14,7 +14,7 @@
 
 ## Config
 
-Model config: `~/.config/pstack/models`.
+Model config: `~/.config/pstack/crush/models`.
 
 User-level instruction file: `~/.config/crush/CRUSH.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 

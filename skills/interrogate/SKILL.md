@@ -33,7 +33,7 @@ Write one clear paragraph. If you're unsure about the intent, ask the user befor
 
 ## Step 3, Spawn Reviewers
 
-Launch all reviewers in a single message as readonly subagents, per the **harness** skill. Use the `interrogate reviewers` panel from `~/.config/pstack/models` when present, one reviewer per entry, extending or shrinking the Reviewer A/B/C/D labels below to the configured entry count. Otherwise use the adapter defaults, up to four distinct model families with the strongest judgment model included:
+Launch all reviewers in a single message as readonly subagents, per the **harness** skill. Use the `interrogate reviewers` panel from `~/.config/pstack/<harness>/models` when present, one reviewer per entry, extending or shrinking the Reviewer A/B/C/D labels below to the configured entry count. Otherwise use the adapter defaults, up to four distinct model families with the strongest judgment model included:
 
 | Subagent | Default model |
 |----------|---------------|
