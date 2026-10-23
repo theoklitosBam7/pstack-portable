@@ -5,7 +5,7 @@ This directory is the maintained source for verifying the user-facing behavior o
 ## Baseline preconditions
 
 - Commands in this map run from the repo root, meaning the checkout of this repository. The checkout stays the symlink target; never verify a copied tree.
-- Every drive is read-only. A verification run never edits skill files, never repairs the install, and never writes `~/.config/pstack/models`. Repair is a setup action (`/setup-pstack`, the install command), not a proof.
+- Every drive is read-only. A verification run never edits skill files, never repairs the install, and never writes `~/.config/pstack/<harness>/models`. Repair is a setup action (`/setup-pstack`, the install command), not a proof.
 - Pick a unique `RUN_ID` (date plus slug, for example `2026-08-29-skillload`) and write evidence to `.agents/skills/verify-pstack/evidence/<RUN_ID>/`.
 - `python3` is on `PATH` for the checker.
 - Run `verify.py doctor` (see the skill body) before the first drive of the run. Green doctor or no drive; if doctor fails on real install drift, record the finding and drive the features that do not depend on it.
@@ -40,7 +40,7 @@ Keep implementation details out of the map. Name only user paths, stable handles
 ## Features
 
 - [Install](./install.md) covers the `~/.agents/skills/` install: completeness, manual symlink targets, and the official Skills CLI lock.
-- [Model config](./model-config.md) covers `~/.config/pstack/models`: line format, role names, and live role resolution.
+- [Model config](./model-config.md) covers `~/.config/pstack/<harness>/models`: line format, role names, and live role resolution.
 - [Skill load](./skill-load.md) covers cold loading: frontmatter registration, link integrity, and a fresh agent quoting a real file.
 - [poteto-mode routing](./poteto-mode-routing.md) covers playbook links and a cold agent matching a task to a playbook.
 - [Personas](./personas.md) covers the two shipped subagent personas: frontmatter, links, and install drift.

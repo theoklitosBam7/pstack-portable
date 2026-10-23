@@ -80,7 +80,7 @@ Aim for a complete **coverage map**, not a minimal one. Document the null, don't
 Launch all matching investigators in a single message so they run concurrently. Don't ask one agent to cover multiple MCPs.
 
 Subagent config (each), per the **harness** skill:
-- model: the `why investigators` role from `~/.config/pstack/models`, adapter default otherwise
+- model: the `why investigators` role from `~/.config/pstack/<harness>/models`, adapter default otherwise
 - mode: agent, not readonly, where the harness strips MCP access in readonly mode. MCP-backed investigators need access to their evidence sources. Investigators still shouldn't write anything. That's a posture, not a sandbox.
 
 Each investigator gets:
@@ -123,7 +123,7 @@ If your scope assessment suggests a single-commit trivial target where the PR de
 
 Spawn one synthesizer subagent, per the **harness** skill:
 
-- model: the `why synthesizer` role from `~/.config/pstack/models`, adapter default otherwise
+- model: the `why synthesizer` role from `~/.config/pstack/<harness>/models`, adapter default otherwise
 - mode: agent, not readonly, where the harness strips MCPs in readonly mode. The synthesizer's quality check spot-verifies citations, which can require MCP access. Readonly mode defeats that.
 
 The synthesizer gets:

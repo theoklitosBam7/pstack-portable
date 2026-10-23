@@ -14,11 +14,11 @@
 
 ## Config
 
-Model config: `~/.config/pstack/models`.
+Model config: `~/.config/pstack/copilot-cli/models`.
 
 User-level instruction file: `~/.copilot/copilot-instructions.md`. If `COPILOT_HOME` is set, use `$COPILOT_HOME/copilot-instructions.md` instead. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
-`COPILOT_HOME` also replaces `~/.copilot` in the agent, MCP, and transcript paths above. The pstack model config stays at `~/.config/pstack/models`. Custom instructions must be enabled for the config-reading instruction to load.
+`COPILOT_HOME` also replaces `~/.copilot` in the agent, MCP, and transcript paths above. The pstack model config stays at `~/.config/pstack/copilot-cli/models`. Custom instructions must be enabled for the config-reading instruction to load.
 
 ## Default model roles
 

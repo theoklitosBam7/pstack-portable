@@ -5,7 +5,7 @@ description: "Drive and prove pstack-portable's user-facing behavior: the ~/.age
 
 # Verify pstack-portable
 
-pstack-portable is a skills collection, not a server. The app is markdown: the files under `skills/`, `agents/`, and `automations/` that harnesses load through the install, plus the model config at `~/.config/pstack/models` that routes roles. A proof here means a real file loaded cold by a fresh agent, or a checker run with its output saved. The feature map in `features/` is the maintained list of what to drive.
+pstack-portable is a skills collection, not a server. The app is markdown: the files under `skills/`, `agents/`, and `automations/` that harnesses load through the install, plus the model config at `~/.config/pstack/<harness>/models` that routes roles. A proof here means a real file loaded cold by a fresh agent, or a checker run with its output saved. The feature map in `features/` is the maintained list of what to drive.
 
 ## Launch
 
@@ -22,7 +22,7 @@ Teardown: no process exists, so there is nothing to stop. Concurrent runs are sa
 
 - checkout shape: `skills/` and `agents/` exist at the repo the script belongs to,
 - install: every `skills/` directory has an entry in `~/.agents/skills/`; manual installs require symlinks that resolve inside this checkout, while Skills CLI installs require `~/.agents/.skill-lock.json` to record every skill from `theoklitosBam7/pstack-portable`,
-- model config: every non-comment line parses as `role: value`, roles come from the table in `skills/setup-pstack/SKILL.md`, panel list entries are non-empty.
+- model configs: for every adapter in `skills/harness/references/`, check its `~/.config/pstack/<adapter-name>/models` file when present. Ignore the old shared `~/.config/pstack/models` file. Every non-comment line parses as `role: value`, roles come from the table in `skills/setup-pstack/SKILL.md`, panel list entries are non-empty.
 
 Exit 0 prints `doctor: ok`. `FAIL` lines name the section and include the fix (the README's install command, or re-running `/setup-pstack`). Run doctor before the first drive of a run, and again after any failed drive. A verification run reports doctor failures; it never repairs the install itself. Repair is a setup action for the user.
 

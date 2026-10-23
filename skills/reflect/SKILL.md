@@ -28,7 +28,7 @@ For each candidate, read the first JSONL line and check that `message.content[0]
 
 ### 2. Spawn three reviewers in parallel
 
-One message, three subagents with explicit model roles from `~/.config/pstack/models`, per the **harness** skill, in agent mode. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript). The prompt forbids file writes; the parent applies edits.
+One message, three subagents with explicit model roles from `~/.config/pstack/<harness>/models`, per the **harness** skill, in agent mode. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript). The prompt forbids file writes; the parent applies edits.
 
 | Lens | Model role | Prompt template |
 |---|---|---|
@@ -40,7 +40,7 @@ Pass each template verbatim, substituting the transcript path or digest where ma
 
 ### 3. Synthesize
 
-One subagent, using the `reflect judgment` role from `~/.config/pstack/models`, adapter default otherwise, in agent mode per the **harness** skill. The synthesizer's quality check includes spot-verifying citations, which can require MCP access. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
+One subagent, using the `reflect judgment` role from `~/.config/pstack/<harness>/models`, adapter default otherwise, in agent mode per the **harness** skill. The synthesizer's quality check includes spot-verifying citations, which can require MCP access. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
 
 ### 4. Structural enforcement check
 

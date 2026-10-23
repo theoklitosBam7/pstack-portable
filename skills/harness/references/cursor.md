@@ -14,7 +14,7 @@
 
 ## Config
 
-Model config: `~/.config/pstack/models`.
+Model config: `~/.config/pstack/cursor/models`.
 
 User-level mirror: `~/.cursor/rules/pstack-models.mdc` with `alwaysApply: true`. [Setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) writes the same role mappings to this mirror, which Cursor reads automatically. This mirror completes the models-config setup for Cursor.
 

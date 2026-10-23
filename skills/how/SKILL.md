@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Explore the codebase to answer "how does X work?" Produce an architectural explanation for an engineer joining the subsystem. Build a working mental model without turning the answer into annotated source code.
 
-Resolve model roles through the **harness** skill. Use `~/.config/pstack/models` first, then the active harness adapter's defaults. Use the harness spawn operation and fallback rules for each subagent.
+Resolve model roles through the **harness** skill. Use `~/.config/pstack/<harness>/models` first, then the active harness adapter's defaults. Use the harness spawn operation and fallback rules for each subagent.
 
 ## Step 1. Assess complexity
 
