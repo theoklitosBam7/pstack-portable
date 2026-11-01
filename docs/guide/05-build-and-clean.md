@@ -32,6 +32,14 @@ Each of these routes to its playbook ([Bug fix](../../skills/poteto-mode/playboo
 
 For sustained improvement of one number, there's the [Hillclimb playbook](../../skills/poteto-mode/playbooks/hillclimb.md). Give it the metric, a target, and a floor on attempts, and it loops one hypothesis at a time with a frozen measurement harness. It keeps wins and reverts everything else.
 
+Both perf playbooks run [`/benchmark-checklist`](../../skills/benchmark-checklist/SKILL.md) on their measurements. Perf issue vets its baseline and subsequent measurements. Hillclimb vets its measurement setup before freezing it. [Verify and ship](./06-verify-and-ship.md#vet-a-measured-number-with-benchmark-checklist) explains when to run it yourself.
+
+For a live symptom, the [Runtime forensics playbook](../../skills/poteto-mode/playbooks/runtime-forensics.md) instruments the running process. For a captured profile, the [Trace forensics playbook](../../skills/poteto-mode/playbooks/trace-forensics.md) maps the hot frame to source. Both return a diagnosis, not a fix:
+
+```text
+/poteto-mode here's a cpuprofile from the slow startup. tell me where the time goes and which source lines own it. no fix yet.
+```
+
 ## Write the failing test first with `/pstack-tdd`
 
 When a bug has a cheap local test path, the whole prompt can be two words:
@@ -42,9 +50,9 @@ When a bug has a cheap local test path, the whole prompt can be two words:
 
 In context, that's enough. [`/pstack-tdd`](../../skills/pstack-tdd/SKILL.md) writes the smallest test that fails for the intended reason, then the fix, then reruns the test. If a test would need broad harness setup or brittle mocks, the skill says so and uses the closest executable check instead. Don't force a test where a real command is stronger evidence.
 
-## Let the TypeScript rules load themselves
+## Load the TypeScript rules by name
 
-[`typescript-best-practices`](../../skills/typescript-best-practices/SKILL.md) has no slash command in your workflow. It loads whenever the agent touches a `.ts` or `.tsx` file and turns the type-system principles into concrete rules: discriminated unions, `unknown` at boundaries, exhaustive variants, schema-derived types.
+[`typescript-best-practices`](../../skills/typescript-best-practices/SKILL.md) covers discriminated unions, `unknown` at boundaries, exhaustive variants, and schema-derived types. Invoke it by name when working on `.ts` or `.tsx` files if your harness does not load it automatically.
 
 ## Clean before you commit
 

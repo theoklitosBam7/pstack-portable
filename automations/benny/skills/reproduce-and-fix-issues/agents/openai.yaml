@@ -1,0 +1,7 @@
+interface:
+  display_name: "Reproduce and Fix Issues"
+  short_description: "Reproduce and fix triaged Benny issues"
+  default_prompt: "Use $reproduce-and-fix-issues within the configured Benny repro automation."
+
+policy:
+  allow_implicit_invocation: false

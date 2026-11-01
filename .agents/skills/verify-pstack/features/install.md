@@ -1,11 +1,11 @@
 # Install
 
-A harness session can load every pstack skill by its slash name through either the official Skills CLI install or a manual symlink install. The CLI records its installed skills in `~/.agents/.skill-lock.json`; the manual path keeps one symlink per `skills/` directory, with each link resolving into this checkout.
+A harness session can load every pstack skill by its slash name through the Skills CLI or a manual install. The CLI records its installed skills in `~/.agents/.skill-lock.json`. A manual install may use checkout symlinks, exact copies, or both.
 
 ## Sub-features
 
 - `install-complete`: every directory under `skills/` has an entry in `~/.agents/skills/`.
-- `install-symlink`: each manual-install entry is a symlink, not a copied directory.
+- `install-copy`: each manual copy matches the checkout tree, including nested entries, file contents, and symlink targets.
 - `install-target`: each symlink resolves inside this checkout.
 - `install-lock`: the global Skills CLI lock records every checkout skill with the expected source and path.
 
@@ -23,17 +23,16 @@ Preconditions:
 - doctor has run this session (its install section is this feature's bulk check).
 - `~/.agents/skills/` exists.
 
-- Full install audit, expect `doctor: ok` or `FAIL` lines naming missing links or lock drift: `python3 .agents/skills/verify-pstack/verify.py doctor`
+- Full install audit, expect `doctor: ok` or `FAIL` lines naming install drift. A stale lock is a warning only if the manual install passes independently: `python3 .agents/skills/verify-pstack/verify.py doctor`
 - Spot-check three skills (`how`, `unslop`, `poteto-mode`) in whichever install mode they use:
   - Skills CLI copy, expect `<name> copy` per skill: `for n in how unslop poteto-mode; do test -f ~/.agents/skills/$n/SKILL.md && ! test -L ~/.agents/skills/$n && echo "$n copy"; done`, and the lock names this repo: `python3 -c "import json,pathlib;print(json.loads(pathlib.Path.home().joinpath('.agents/.skill-lock.json').read_text())['skills']['poteto-mode']['source'])"`
   - Manual symlink, expect `<name> linked` per skill and a target inside this checkout: `for n in how unslop poteto-mode; do test -L ~/.agents/skills/$n && echo "$n linked"; done`, then `readlink -f ~/.agents/skills/poteto-mode`
-- User-visible end state: the session's own skill list contains pstack skills by slash name. In the pi session running the drive, the loaded skills include `how`, `unslop`, and `poteto-mode` from this checkout. Save that observation to evidence.
+- User-visible end state: the session's own skill list contains pstack skills by slash name. In the pi session running the drive, the loaded skills include `how`, `unslop`, and `poteto-mode` from the verified install. Save that observation to evidence.
 
 ## Gotchas
 
-- A copied directory without a valid Skills CLI lock is not a valid manual install. The doctor flags it; do not "fix" it by copying again.
-- A missing lock file is also a valid state: the doctor then applies the manual symlink rules. Lock absent plus copied directories is the invalid combination.
-- A Skills CLI install may use copied directories. The doctor accepts them only when `~/.agents/.skill-lock.json` records every checkout skill from `theoklitosBam7/pstack-portable` with its expected `skillPath`.
-- A real directory at the same name without a valid Skills CLI lock shadows the repo skill. pi loads the copy, so edits in this checkout never appear. The doctor catches this as a non-symlink; the fix is replacing the copy with a link, which belongs to the user, not the verification run.
+- Manual copies must match the checkout completely. Changes in the checkout do not update copies; doctor reports missing, extra, or different entries.
+- A missing lock is valid for a manual install. A partial or malformed lock is reported as drift, not as a current CLI lock, when all entries pass the manual checks.
+- A valid Skills CLI lock records every checkout skill from `theoklitosBam7/pstack-portable` with its expected `skillPath`. Doctor retains the CLI directory checks for that install mode.
 - A dangling link means the checkout moved. Report the old target; never delete the user's links without saying so.
-- Verification never repairs the install. Report, hand back the fix command, and let the user or a setup run apply it.
+- Verification never repairs the install. Report the drift and let the user choose how to repair it. Do not overwrite existing files.

@@ -27,7 +27,7 @@ After these sections, attach videos or screenshots when they prove a claim. Do n
 
 Use the resolved forge for every PR operation.
 
-**Size and stacks.** Prefer five narrow PRs to one large PR. A stack is a base-branch chain. The root PR targets trunk. Each child branch rebases onto its parent's exact tip and its PR targets the parent branch. Create a child with the resolved forge's PR command and `--base <parent-branch>`. Retarget an existing child with that forge's edit command. Branch from trunk only for independent work. Rebase on trunk before substantial stack work.
+**Size and stacks.** Prefer five narrow PRs to one large PR. A stack is a base-branch chain. The root PR targets trunk. Each child branch rebases onto its parent's exact tip and its PR targets the parent branch. As a parent merges, move its child onto trunk per `playbooks/shipping.md`. Create a child with the resolved forge's PR command and `--base <parent-branch>`. Retarget an existing child with that forge's edit command. Branch from trunk only for independent work. Rebase on trunk before substantial stack work.
 
 **Readiness.** Open every PR ready, never as a draft. With Origin, pass `--status open`. With `gh`, omit `--draft`. If a PR still opens as a draft, run `origin pr ready <number>` or `gh pr ready <number>` according to the resolved forge. Run the resolved forge's PR view command before you refer to PR status.
 

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Create Formal Verification Skill"
+  short_description: "Generate a formal verification skill"
+  default_prompt: "Use $create-formal-verification-skill to verify a high-risk property of this project."
+
+policy:
+  allow_implicit_invocation: false

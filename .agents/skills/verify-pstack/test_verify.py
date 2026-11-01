@@ -1,6 +1,10 @@
 """Regression tests for harness-specific model config checks."""
 
+import contextlib
 import importlib.util
+import io
+import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -89,6 +93,111 @@ class ModelConfigTests(unittest.TestCase):
         self.assertEqual(failures, [])
         self.assertEqual(len(warnings), 1)
         self.assertIn(f"{config}:1", warnings[0])
+
+
+class InstallTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.repo = (self.root / "repo").resolve()
+        self.install = self.root / "install"
+        self.lock = self.root / "lock.json"
+        self.install.mkdir()
+        (self.repo / "agents").mkdir(parents=True)
+        for name in ("alpha", "beta"):
+            skill = self.repo / "skills" / name
+            (skill / "nested").mkdir(parents=True)
+            (skill / "SKILL.md").write_text(name)
+            (skill / "nested" / "data").write_text("data")
+            (skill / "nested" / "link").symlink_to("data")
+        for key, value in (("REPO", self.repo), ("INSTALL", self.install),
+                           ("LOCK", self.lock), ("CONFIG_ROOT", self.root / "config")):
+            patcher = patch.object(verify, key, value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    def copy(self, name):
+        shutil.copytree(self.repo / "skills" / name, self.install / name, symlinks=True)
+
+    def write_lock(self, names):
+        self.lock.write_text(json.dumps({"skills": {
+            name: {"source": verify.PSTACK_SOURCE, "skillPath": f"skills/{name}/SKILL.md"}
+            for name in names
+        }}))
+
+    def doctor(self):
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            try:
+                verify.cmd_doctor()
+            except SystemExit as exc:
+                return exc.code, output.getvalue()
+        return 0, output.getvalue()
+
+    def test_exact_copies_and_nested_symlinks_pass_without_changes(self):
+        self.copy("alpha")
+        self.copy("beta")
+        self.assertEqual(self.doctor()[0], 0)
+        self.assertEqual((self.install / "alpha" / "nested" / "link").readlink(), Path("data"))
+
+    def test_copy_drift_extra_missing_and_symlink_differences_fail(self):
+        for change in ("content", "extra", "missing", "symlink"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp) / "source"
+                installed = Path(tmp) / "installed"
+                shutil.copytree(self.repo / "skills" / "alpha", source, symlinks=True)
+                shutil.copytree(source, installed, symlinks=True)
+                if change == "content":
+                    (installed / "nested" / "data").write_text("different")
+                elif change == "extra":
+                    (installed / "extra").write_text("extra")
+                elif change == "missing":
+                    (installed / "nested" / "data").unlink()
+                else:
+                    (installed / "nested" / "link").unlink()
+                    (installed / "nested" / "link").symlink_to("other")
+                self.assertIsNotNone(verify.compare_skill_copy(source, installed))
+
+    def test_mixed_copy_and_checkout_symlink_pass(self):
+        self.copy("alpha")
+        (self.install / "beta").symlink_to(self.repo / "skills" / "beta")
+        self.assertEqual(self.doctor()[0], 0)
+
+    def test_partial_lock_warns_for_proven_manual_install(self):
+        self.copy("alpha")
+        self.copy("beta")
+        self.write_lock(["alpha"])
+        code, output = self.doctor()
+        self.assertEqual(code, 0)
+        self.assertIn("warning: lock drift:", output)
+        self.assertNotIn("lock: " + str(self.lock) + " covers", output)
+
+    def test_partial_lock_and_drift_fail(self):
+        self.copy("alpha")
+        self.copy("beta")
+        self.write_lock(["alpha"])
+        (self.install / "beta" / "SKILL.md").write_text("stale")
+        code, output = self.doctor()
+        self.assertEqual(code, 1)
+        self.assertIn("differs", output)
+        self.assertIn("FAIL: lock:", output)
+
+    def test_valid_cli_lock_preserves_existing_directory_behavior(self):
+        for name in ("alpha", "beta"):
+            (self.install / name).mkdir()
+            (self.install / name / "SKILL.md").write_text("CLI version")
+        self.write_lock(["alpha", "beta"])
+        code, output = self.doctor()
+        self.assertEqual(code, 0)
+        self.assertIn("covers 2 checkout skill(s)", output)
+        (self.install / "beta" / "SKILL.md").unlink()
+        self.assertEqual(self.doctor()[0], 1)
+
+    def test_external_symlink_fails(self):
+        self.copy("alpha")
+        (self.install / "beta").symlink_to(self.root)
+        self.assertEqual(self.doctor()[0], 1)
 
 
 if __name__ == "__main__":

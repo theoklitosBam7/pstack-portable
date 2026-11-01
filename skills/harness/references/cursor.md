@@ -20,7 +20,7 @@ User-level mirror: `~/.cursor/rules/pstack-models.mdc` with `alwaysApply: true`.
 
 ## Default model roles
 
-Configured lines win. Without config, `code` and `fast` use `grok-4.7-xhigh-fast`; `judgment` and `hardest` use `claude-opus-5-5-max`. `arena runners`, `arena cross-judge pool`, `architect runners`, and `interrogate reviewers` use `claude-opus-5-5-max`, `gpt-5.6-sol-max`, and `grok-4.7-xhigh-fast`. `how explorer`, `why investigators`, and `swarm workers` use `grok-4.7-xhigh-fast`. `how explainer`, `why synthesizer`, and `reflect judgment` use `claude-opus-5-5-max`. `reflect tooling` uses `gpt-5.6-sol-max`. Playbook lines map: `feature`, `refactoring`, `bug-fix`, `perf-issue`, and `hillclimb` use the `code` role; `hardest tasks` use the `hardest` role.
+Configured lines win. Without config, `code` and `fast` use `grok-4.7-xhigh-fast`; `judgment` and `hardest` use `claude-opus-5-5-xhigh`. `arena runners`, `arena cross-judge pool`, `architect runners`, and `interrogate reviewers` use `claude-opus-5-5-xhigh` and `grok-4.7-xhigh-fast`. `how explorer`, `why investigators`, `swarm workers`, and `reflect tooling` use `grok-4.7-xhigh-fast`. `how explainer`, `why synthesizer`, and `reflect judgment` use `claude-opus-5-5-xhigh`. Playbook lines map: `feature`, `refactoring`, `bug-fix`, `perf-issue`, and `hillclimb` use the `code` role; `hardest tasks` use the `hardest` role.
 
 ## Notes
 

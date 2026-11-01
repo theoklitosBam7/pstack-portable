@@ -28,13 +28,19 @@ You only override what you care about. A role with no line in the config keeps t
 
 You might be wondering what happens if you use Auto. Set a role to `inherit-parent` or `auto` and pstack omits the subagent `model` field, so the subagent inherits your parent chat model. Both values mean the same thing, and neither is a model slug. For a panel role the value is a list, and one subagent runs per entry, so the list length sets the panel size. Setup also configures `swarm workers`, the default model for every `/swarm` worker unless a race names a model for each arm.
 
-## Accept the verification offer, or don't
+## Accept the verification offers, or don't
 
 At the end of setup, `/setup-pstack` looks for a way to prove app behavior in your project, either a `verify-*` skill or an existing harness. If it finds neither, it offers once to generate one with [`/create-verification-skill`](../../skills/create-verification-skill/SKILL.md).
 
 Say yes and it writes `verify-<app>/` into the project's skills directory, a project-local skill that teaches agents to drive your app the way a user does. It proves the skill works once before handing it over. Say no and setup moves on. You can run `/create-verification-skill` yourself any time. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers when it earns its place.
 
+Setup also offers to create a formal verification skill if the project does not already have one. Use [`/create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md) to check a property within a stated scope, such as whether a retry queue can deliver a message twice. It is useful for concurrency, retries, state machines, and parsers. You can decline and run it later. [Verify and ship](./06-verify-and-ship.md#prove-a-property-with-a-formal-verification-skill) explains the workflow.
+
 After setup, start a new chat. The model rule applies to new sessions.
+
+## Keep the cost in check
+
+Subagents and review panels use extra tokens. To reduce the cost, rerun `/setup-pstack` and choose a smaller reasoning budget or cheaper models. You can also shorten a panel list or reserve `/poteto-mode` for work that needs its checks.
 
 ## Run your first task
 

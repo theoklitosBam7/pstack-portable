@@ -1,0 +1,7 @@
+interface:
+  display_name: "Maintain Formal Verification Skill"
+  short_description: "Update formal checks after code changes"
+  default_prompt: "Use $maintain-formal-verification-skill to update checks for the current code."
+
+policy:
+  allow_implicit_invocation: false

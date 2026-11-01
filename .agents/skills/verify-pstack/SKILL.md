@@ -21,10 +21,10 @@ Teardown: no process exists, so there is nothing to stop. Concurrent runs are sa
 `verify.py doctor` answers "is this install worth driving?" It is read-only and checks:
 
 - checkout shape: `skills/` and `agents/` exist at the repo the script belongs to,
-- install: every `skills/` directory has an entry in `~/.agents/skills/`; manual installs require symlinks that resolve inside this checkout, while Skills CLI installs require `~/.agents/.skill-lock.json` to record every skill from `theoklitosBam7/pstack-portable`,
+- install: every `skills/` directory has an entry in `~/.agents/skills/`. Manual entries may be symlinks resolving inside this checkout or exact copies of the checkout tree, including nested files and symlink targets. A valid Skills CLI lock also accepts CLI skill directories. A partial or invalid lock produces warnings only when the install passes the independent manual checks; it does not become a current CLI lock,
 - model configs: for every adapter in `skills/harness/references/`, check its `~/.config/pstack/<adapter-name>/models` file when present. Ignore the old shared `~/.config/pstack/models` file. Every non-comment line parses as `role: value`, roles come from the table in `skills/setup-pstack/SKILL.md`, panel list entries are non-empty.
 
-Exit 0 prints `doctor: ok`. `FAIL` lines name the section and include the fix (the README's install command, or re-running `/setup-pstack`). Run doctor before the first drive of a run, and again after any failed drive. A verification run reports doctor failures; it never repairs the install itself. Repair is a setup action for the user.
+Exit 0 prints `doctor: ok`. `FAIL` lines name the section and the problem. Report install drift without changing the user's files; the user can choose how to repair it. For config drift, re-run `/setup-pstack`. Run doctor before the first drive of a run, and again after any failed drive. A verification run reports doctor failures; it never repairs the install itself. Repair is a setup action for the user.
 
 ## Drive
 

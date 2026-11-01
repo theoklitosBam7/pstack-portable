@@ -12,6 +12,38 @@ use /how first to understand how this initialization works. then use /why to fig
 
 Mechanics first, history second. Each skill's report tells you which sources it searched, so you know what the answer is grounded in.
 
+## Restate a noisy report before touching code
+
+```text
+/in-your-own-words read this thread and restate the underlying issue. don't change any code yet.
+```
+
+A restatement lets you correct a misreading before the agent changes code. Keep your own theory until the agent has stated its own.
+
+## Sharpen a prompt before you send it
+
+```text
+/sharpen write the onboarding doc for the new billing service.
+```
+
+[`/sharpen`](../../skills/sharpen/SKILL.md) identifies what an expert would do, the material and tools they would use, and how to check the result. It rewrites your prompt without doing the task.
+
+## Prototype before you pick
+
+```text
+/poteto-mode prototype a few options for the settings layout. put them behind a switcher and send me screenshots of each.
+```
+
+Compare working options before choosing a design. The [design guide](./04-design.md) describes the prototype workflow.
+
+## Turn a settled design into a plan
+
+```text
+/poteto-mode turn this design into a plan. small verifiable PRs, each with its own proof.
+```
+
+The plan names the steps, their evidence, and the playbook that will execute them.
+
 ## Get a second opinion on a design
 
 ```text
@@ -43,6 +75,30 @@ The qualifiers do real work. "don't change anything yet" keeps it read-only, and
 ```
 
 "if there's a cheap test path" matters. Forcing a test through brittle mocks proves less than running the real command, and the playbook is allowed to say so.
+
+## Prove a property tests rarely reach
+
+```text
+/create-formal-verification-skill the retry queue. a message must never be delivered twice.
+```
+
+The result states the scope of the check, gives a counterexample if the property fails, and provides a project skill for later changes to the code.
+
+## Vet a number before you post it
+
+```text
+/benchmark-checklist vet this 40% speedup before it goes in the pr description
+```
+
+The result states whether the change is faster, slower, indistinguishable, or inconclusive, with evidence and limits.
+
+## Stop correcting the same mistake
+
+```text
+/correct agents keep adding new config flags without registering them in the schema
+```
+
+The skill looks for a change to the repo that prevents the mistake in later runs.
 
 ## Keep a run honest while you're away
 
@@ -77,6 +133,16 @@ You rarely need more words. You need the right name, and [the principles page](.
 ```
 
 That's the whole prompt. [`/bro`](../../skills/bro/SKILL.md) restates the last message like one human talking to another, no jargon, shorter. Use it when a reply is technically thorough and you still don't know what it said.
+
+## Catch up on a chat you left running
+
+```text
+/ketchup
+```
+
+[`/ketchup`](../../skills/ketchup/SKILL.md) reports what changed since your last message and lists decisions waiting on you with evidence and risks. It does not change the work.
+
+[`/ketchup-video`](../../skills/ketchup-video/SKILL.md) presents the catch-up as a short subtitled video and lists the decisions as text.
 
 ## The pitfalls
 

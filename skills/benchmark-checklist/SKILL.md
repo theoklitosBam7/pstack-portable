@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Benchmark checklist
 
-Use this when you produce a performance number: a PR's before and after, a regression claim, a hillclimb harness, or a library or config choice. [Explain the Number](../principle-explain-the-number/SKILL.md) says why. Answer each question below with evidence from a run, not from a guess about the code.
+Use this when you produce a performance number: a PR's before and after, a regression claim, a hillclimb harness, or a library or config choice. Answer each question with evidence from a run, not a guess about the code.
 
 For a quick ballpark the user asked for, one run is enough. Still check questions 4 and 7, and label the result as a single observation. Say that its range and repeatability are not established. Do not present it as a measurable difference or a winner. Skip the rest unless that run looks wrong. A choice between options is never a ballpark.
 
@@ -31,9 +31,9 @@ For a quick ballpark the user asked for, one run is enough. Still check question
 - Lead with the verdict: faster, slower, no measurable difference, or inconclusive.
 - Give the number with its unit, the run count, the range for repeated runs, and the limiter. For a one-run ballpark, mark it as a single observation, say that the range and repeatability are not established, and name any checks you skipped. For example, "single observation: p50 33 ms; range and repeatability not established; limiter not assessed." For repeated runs, write "p50 41 ms → 33 ms, median of 7 runs per side, range 32 to 35 ms after, bound by JSON parsing on one core."
 - Call the verdict inconclusive when you claim a difference but cannot name the limiter, when a side ran untuned, or when you could not check questions 4 and 7. Name the gap.
-- Keep a PR body to one primary number, per the **Opening a PR** playbook. Put the runs, the range, and the limiter evidence in a linked artifact or a notes file.
+- Keep a PR body to one primary number, per the **Opening a PR** playbook. Put the runs, range, and limiter evidence in a linked artifact or notes file.
 
-## How this fits the other perf material
+## Other perf material
 
-- The **Perf issue** playbook finds and fixes slowness, and the performance mantras in its step 2 generate the fixes. This skill vets its baseline before the playbook plans from it, and every number after that.
-- The **Hillclimb** playbook loops on one metric. This skill vets its harness before the harness is frozen. The frozen harness then prints error and work counts, so each keep-or-revert checks questions 4 and 7 for free.
+- Vet the **Perf issue** playbook's baseline before the playbook plans from it, and every number after that.
+- Vet the **Hillclimb** playbook's harness before it is frozen. The frozen harness then prints error and work counts, so each keep-or-revert checks questions 4 and 7 for free.
