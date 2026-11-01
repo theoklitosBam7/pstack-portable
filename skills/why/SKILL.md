@@ -10,7 +10,7 @@ Investigate the motivation and intent behind code.
 
 Companion to the `how` skill. `how` answers what the code does and how it works. `why` answers what forces led to its shape.
 
-Each spawn below names a role line in the pstack model config and a default. Set `model` to that line's value, or to the default if the config or the line is missing. Leave `model` unset when the value is `auto` or `inherit-parent`. If the harness rejects a configured model, use the listed default and say so. If it rejects the default, use the closest valid model from the same family shown in the spawn error.
+Each spawn below names a role line in the pstack model config and a default. Set `model` to that line's value, or to the default if the config or the line is missing. Leave `model` unset when the value is `auto` or `inherit-parent`. If the harness rejects a configured model, use the listed default and say so. If it rejects the default, use the closest valid model from the same family shown in the spawn error. Pick each subagent's reasoning level and fast or standard speed for its task, where the harness supports these settings. Follow the Subagents section of the **poteto-mode** skill.
 
 ## Operating Posture
 
@@ -53,7 +53,7 @@ Pull PR bodies and discussion via `gh` for any substantive commits:
 gh pr view <number> --json title,body,author,createdAt,mergedAt,labels,closingIssuesReferences,comments,reviews
 ```
 
-Capture this as seed context (file paths, symbols, commits, PR numbers, linked ticket IDs). Pass it to the investigators.
+Capture this as seed context (file paths, symbols, commits, PR numbers, linked ticket IDs). Pass it to the investigators and the synthesizer.
 
 ## Step 3. Spawn Parallel Investigators (default posture)
 

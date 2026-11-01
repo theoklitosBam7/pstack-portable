@@ -1,6 +1,6 @@
 # Personas
 
-Two markdown subagent personas ship in `agents/`: `poteto-agent.md` (runs poteto-mode end to end) and `comment-sicko.md` (read-only comment reviewer). Harnesses with persona support install them into their persona directory; others inline the file's text at the top of the brief.
+Two markdown subagent personas ship in `agents/`: `poteto-agent.md` (a delegate during a poteto-mode run) and `comment-sicko.md` (read-only comment reviewer). The parent chat runs the playbook. Harnesses with persona support install them into their persona directory; others inline the file's text at the top of the brief.
 
 ## Sub-features
 
@@ -11,7 +11,7 @@ Two markdown subagent personas ship in `agents/`: `poteto-agent.md` (runs poteto
 ## How to get to it (user POV)
 
 - On cursor, spawn `subagent_type: "poteto-agent"` from a parent agent.
-- On every other harness, the `harness` skill's persona operation installs `agents/*.md` into the persona directory, for example `~/.pi/agent/agents/` on pi, or inlines the file into the brief.
+- On other harnesses, use the `harness` skill's persona operation. Harnesses with custom persona support use a persona directory, such as `~/.pi/agent/agents/` on pi; otherwise the brief includes the persona text.
 
 ## Driving it with pi
 
@@ -21,7 +21,7 @@ Preconditions:
 
 - Frontmatter and link audit, expect `check: ok` (it covers `agents/*.md`): `python3 .agents/skills/verify-pstack/verify.py check`
 - Install drift check. If `~/.pi/agent/agents/poteto-agent.md` exists, expect no output: `diff ~/.pi/agent/agents/poteto-agent.md agents/poteto-agent.md` (same for `comment-sicko.md`).
-- Check per file. If an installed copy exists, diff it against the checkout. If a persona file is absent from the persona directory (the directory itself can exist without the files), record `verified-unreachable: <persona> not installed; inline path is the live route` and prove the inline route instead: the cold load of a skill in `skill-load.md` shows the body a brief would inline is complete.
+- Check per file. If an installed copy exists, diff it against the checkout. If a persona file is absent from the persona directory (the directory itself can exist without the files), record `verified-unreachable: <persona> not installed`. To prove the inline route, spawn a fresh subagent with that persona file's full text in its brief and capture evidence that it received the persona. A cold load of a different skill does not prove this route.
 
 ## Gotchas
 

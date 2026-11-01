@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify Pstack"
+  short_description: "Check the pstack install and skill loading"
+  default_prompt: "Use $verify-pstack to check the pstack install and skill loading."

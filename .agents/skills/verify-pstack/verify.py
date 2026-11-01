@@ -12,6 +12,7 @@ lines fail the run.
 import json
 import os
 import re
+import stat
 import sys
 from pathlib import Path
 
@@ -57,7 +58,7 @@ def finish(label, failures, warnings, notes):
 
 def validate_skill_lock(skill_names, failures, notes):
     if not LOCK.exists():
-        notes.append(f"lock: {LOCK} absent; manual symlink installation remains supported")
+        notes.append(f"lock: {LOCK} absent; manual copy and symlink installations remain supported")
         return False
 
     try:
@@ -80,7 +81,7 @@ def validate_skill_lock(skill_names, failures, notes):
     if not tracked:
         notes.append(
             f"lock: {LOCK} has no entries from {PSTACK_SOURCE}; "
-            "manual symlink installation remains supported"
+            "manual copy and symlink installations remain supported"
         )
         return False
 
@@ -112,6 +113,42 @@ def validate_skill_lock(skill_names, failures, notes):
         )
         return True
     return False
+
+
+def compare_skill_copy(source, installed):
+    """Return the first tree difference without following nested symlinks."""
+    try:
+        source_mode = source.lstat().st_mode
+        installed_mode = installed.lstat().st_mode
+        if stat.S_IFMT(source_mode) != stat.S_IFMT(installed_mode):
+            return f"{installed} has a different type from {source}"
+        if stat.S_ISLNK(source_mode):
+            if os.readlink(source) != os.readlink(installed):
+                return f"{installed} has a different symlink target from {source}"
+        elif stat.S_ISDIR(source_mode):
+            source_names = {entry.name for entry in source.iterdir()}
+            installed_names = {entry.name for entry in installed.iterdir()}
+            missing = sorted(source_names - installed_names)
+            extra = sorted(installed_names - source_names)
+            if missing or extra:
+                return f"{installed} has missing entries {missing} and extra entries {extra}"
+            for name in sorted(source_names):
+                difference = compare_skill_copy(source / name, installed / name)
+                if difference:
+                    return difference
+        elif stat.S_ISREG(source_mode):
+            with source.open("rb") as left, installed.open("rb") as right:
+                while True:
+                    left_chunk, right_chunk = left.read(65536), right.read(65536)
+                    if left_chunk != right_chunk:
+                        return f"{installed} differs from {source}"
+                    if not left_chunk:
+                        break
+        else:
+            return f"{installed} has an unsupported file type"
+    except OSError as exc:
+        return f"cannot compare {installed} with {source}: {exc}"
+    return None
 
 
 def validate_model_configs(failures, warnings, notes):
@@ -153,13 +190,14 @@ def cmd_doctor():
         return
 
     skill_dirs = sorted(d.name for d in (REPO / "skills").iterdir() if d.is_dir())
-    cli_managed = validate_skill_lock(skill_dirs, failures, notes)
+    lock_failures = []
+    cli_managed = validate_skill_lock(skill_dirs, lock_failures, notes)
     missing = [n for n in skill_dirs if not os.path.lexists(INSTALL / n)]
     if missing:
         failures.append(
             f"install: {len(missing)} skill(s) not linked into {INSTALL}: {', '.join(missing)}"
         )
-        notes.append("install fix: mkdir -p ~/.agents/skills && ln -sfn <repo>/skills/<name> ~/.agents/skills/<name>")
+        notes.append("install: choose a manual copy, checkout symlink, or Skills CLI install; do not overwrite existing files")
 
     for n in skill_dirs:
         link = INSTALL / n
@@ -172,9 +210,9 @@ def cmd_doctor():
                         f"install: {link} is not a Skills CLI skill directory with SKILL.md"
                     )
                 continue
-            failures.append(
-                f"install: {link} is not a symlink (a copy shadows the repo skill; replace it with a link)"
-            )
+            difference = compare_skill_copy(REPO / "skills" / n, link)
+            if difference:
+                failures.append(f"install: {difference}")
             continue
         target = link.resolve()
         if not under(REPO, target):
@@ -187,6 +225,12 @@ def cmd_doctor():
             target = link.resolve()
             if under(REPO, target) and not target.exists():
                 failures.append(f"install: {link} -> {target} is dangling")
+
+    if lock_failures:
+        if failures:
+            failures.extend(lock_failures)
+        else:
+            warnings.extend(f"lock drift: {failure}" for failure in lock_failures)
 
     validate_model_configs(failures, warnings, notes)
 

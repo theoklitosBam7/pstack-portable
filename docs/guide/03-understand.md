@@ -4,6 +4,16 @@ Editing code you don't understand is how subtle regressions ship. pstack gives y
 
 ![A detective studies a machine blueprint with a magnifying glass while robots fetch case files; the evidence board behind her links clues under /how and /why.](./images/understanding.jpg)
 
+## Start with a read-only investigation
+
+When the cause is unclear, ask for findings before a fix:
+
+```text
+/poteto-mode investigate why background jobs time out every few hours. give me what we know, what data you used, and your best hypotheses. don't change any code yet.
+```
+
+The [Investigation playbook](../../skills/poteto-mode/playbooks/investigation.md) returns a cited explanation. For a choice between options, it includes a recommendation and trade-offs. Asking for the data separates evidence from hypotheses.
+
 ## Trace behavior with `/how`
 
 ```text
@@ -30,13 +40,19 @@ The two compose naturally. `do why first then how` is a perfectly good prompt wh
 
 [`/pstack-teach`](../../skills/pstack-teach/SKILL.md) is for when a summary isn't enough. It runs `/how` and `/why`, for a small change maybe just one of them, and weaves the findings into a plain explanation that builds up diagram by diagram. The "convince me" framing is worth stealing. It turns the explanation into an argument you can poke at instead of a tour.
 
+You can also ask the agent to explain its own choices:
+
+```text
+/pstack-teach me why you implemented it this way and not with a queue. what did you trade off, and why?
+```
+
 ## Rebuild your own context with `/recall`
 
 ```text
 /recall catch me up on the export work from last week
 ```
 
-[`/recall`](../../skills/recall/SKILL.md) mines your own recent chats plus the shared record (issues, prior fixes, errors still firing) and hands back a brief on where things stand and what's next. Use it when you're returning to a topic cold. If you want to resume one specific chat, that's the Session pickup playbook below, not `/recall`.
+[`/recall`](../../skills/recall/SKILL.md) mines your own recent chats plus the shared record (issues, prior fixes, errors still firing) and hands back a brief on where things stand and what's next. Use it when you're returning to a topic cold, then give the agent the new input. If you want to resume one specific chat, that's the Session pickup playbook below, not `/recall`.
 
 ## Take over prior work with Session pickup
 

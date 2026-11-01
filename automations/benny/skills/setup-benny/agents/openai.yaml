@@ -1,0 +1,7 @@
+interface:
+  display_name: "Set Up Benny"
+  short_description: "Configure Benny automation for a project"
+  default_prompt: "Use $setup-benny to configure the Benny automation pack."
+
+policy:
+  allow_implicit_invocation: false

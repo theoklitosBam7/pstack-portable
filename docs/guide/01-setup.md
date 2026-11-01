@@ -36,6 +36,10 @@ Say yes and it writes `verify-<app>/` into the project's skills directory, a pro
 
 After setup, start a new chat. The model rule applies to new sessions.
 
+## Keep the cost in check
+
+Subagents and review panels use extra tokens. To reduce the cost, rerun `/setup-pstack` and choose a smaller reasoning budget or cheaper models. You can also shorten a panel list or reserve `/poteto-mode` for work that needs its checks.
+
 ## Run your first task
 
 Pick something real but small, and describe it the way you'd describe it to a colleague:

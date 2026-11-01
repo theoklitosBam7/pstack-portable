@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ketchup"
+  short_description: "Summarize recent work and open decisions"
+  default_prompt: "Use $ketchup to summarize recent work and list decisions waiting for me."
+
+policy:
+  allow_implicit_invocation: false

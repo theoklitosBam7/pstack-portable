@@ -1,0 +1,7 @@
+interface:
+  display_name: "Triage Issue Reports"
+  short_description: "Triage reports within the Benny automation"
+  default_prompt: "Use $triage-issue-reports within the configured Benny triage automation."
+
+policy:
+  allow_implicit_invocation: false

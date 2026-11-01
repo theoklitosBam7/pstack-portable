@@ -50,6 +50,18 @@ Apps change and feature maps rot. When yours drifts, run:
 
 [`/maintain-verification-skill`](../../skills/maintain-verification-skill/SKILL.md) audits the generated skill: one read-only source reader per feature in parallel, then one live pass that drives every mapped feature. It ends in exactly one of three outcomes. `clean` means full coverage and nothing to ship. `changed` means one PR of proven corrections, confined to the verification skill's own directory. `blocked` names the blocker. It never edits product code. If the live pass catches a product regression, it reports the regression instead of papering over it in docs.
 
+## Prove a property with a formal verification skill
+
+A verification skill proves the paths you drive. Some bugs occur on paths that tests rarely reach, such as overlapping retries or a lock that expires mid-write. For code where such a bug is costly, run:
+
+```text
+/create-formal-verification-skill the job lease and retry logic. a job must never run twice at once.
+```
+
+[`/create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md) chooses a property and a verification method suited to it. It reports the tool, bounds, and limits of the check. If the code breaks the property, it reports a counterexample in the code's terms. The generator also checks that the verification can detect a broken variant and writes a project-local skill for future changes. It does not change product code unless you ask.
+
+After merges or refactors, run [`/maintain-formal-verification-skill`](../../skills/maintain-formal-verification-skill/SKILL.md) to check that the verification still matches the code. It updates and reruns the checks, proves that updated checks can still fail, and distinguishes verification drift from product bugs.
+
 ## Open the PR
 
 ```text

@@ -28,7 +28,7 @@ For each candidate, read the first JSONL line and check that `message.content[0]
 
 ### 2. Spawn three reviewers in parallel
 
-One message, three subagents with explicit model roles from `~/.config/pstack/<harness>/models`, per the **harness** skill, in agent mode. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript). The prompt forbids file writes; the parent applies edits.
+One message, three subagents with explicit model roles from `~/.config/pstack/<harness>/models`, per the **harness** skill, in agent mode. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript). The prompt forbids file writes; the parent applies edits. Pick each subagent's reasoning level and fast or standard speed for its task, where the harness supports these settings. Follow the Subagents section of the **poteto-mode** skill.
 
 | Lens | Model role | Prompt template |
 |---|---|---|
@@ -51,6 +51,8 @@ Sanity-check the synthesizer's Accepted list. For any item that would be enforce
 Before applying any Accepted edit, present the synthesizer's full Accepted/Rejected/Backlog output to the user and wait for explicit approval. The user picks which subset to apply and may redirect routings. Skill changes affect every future agent in the org. Do not auto-apply.
 
 Backlog items file to whatever devex / backlog tracker your team uses automatically. Only the Accepted list waits for approval.
+
+Never edit a skill under `plugins/cache/`. Before approval, show the user the destination for an editable copy. After approval, copy the skill there and edit the copy. Never open a PR or push.
 
 For each approved Accepted item, follow the Routing field exactly:
 

@@ -25,9 +25,9 @@ The `how critics` role is no longer used. When the current config has that line,
 
 ### 4. Choose a reasoning budget
 
-Use the harness's ask-user operation. Offer these choices and include the current budget when the config records one:
+Use the harness's ask-user operation. Offer these choices and include the current budget when the config records one. On Cursor, when there is no config, say that `large` matches the adapter defaults:
 
-- `unlimited` to keep the highest available reasoning level.
+- `unlimited` for `max` reasoning, or the highest available level below it.
 - `large` for `xhigh` reasoning.
 - `medium` for `high` reasoning.
 - `small` for `medium` reasoning.
@@ -44,7 +44,7 @@ Some harnesses use model IDs that do not show an effort suffix. Keep those IDs u
 
 Show every role and its model. Mark any ID that is not in the detected list as needing a choice. State which roles could not use the selected budget, and list any retired config lines that you will omit.
 
-Ask whether the user accepts the table or wants to change specific roles. Offer detected models, `inherit-parent`, and `auto`. Both aliases mean that the role uses the parent session model. Use the harness's ask-user operation. For panels (`arena runners`, `architect runners`, and `interrogate reviewers`), the value is a list. One subagent runs per entry, so the list length sets the panel size. `arena cross-judge pool` is a list from which Arena picks a model family that differs from the parent's when possible. `swarm workers` is the default for workers unless a race or comparison assigns a model to each arm.
+Ask whether the user accepts the table or wants to change specific roles. Offer detected models, `inherit-parent`, and `auto`. Both aliases mean that the role uses the parent session model. Use the harness's ask-user operation. For panels (`arena runners`, `architect runners`, and `interrogate reviewers`), the value is a list. One subagent runs per entry, so the list length sets the panel size. `arena cross-judge pool` is an ordered preference list. Arena runs one judge and tries only models from a family other than the parent's, in list order. `inherit-parent` and `auto` never judge. `swarm workers` is the default for workers unless a race or comparison assigns a model to each arm.
 
 ### 6. Write the config
 
@@ -95,3 +95,7 @@ Tell the user which config and instruction or mirror files you wrote. State the 
 ### 8. Offer a verification skill
 
 Check whether the project has a way to drive the real app for proof, such as a `verify-*` skill or an existing harness. If it does not, offer once to create a project-local verification skill. On yes, invoke `/create-verification-skill`. On no, continue without asking again.
+
+### 9. Offer a formal verification skill
+
+Check whether the project has a formal verification skill that runs a model checker, proof, or other verifier against the code. If it does not, offer once to create one with `/create-formal-verification-skill`. On yes, invoke that skill. On no, continue without asking again.
