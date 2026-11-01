@@ -28,6 +28,22 @@ A restatement lets you correct a misreading before the agent changes code. Keep 
 
 [`/sharpen`](../../skills/sharpen/SKILL.md) identifies what an expert would do, the material and tools they would use, and how to check the result. It rewrites your prompt without doing the task.
 
+## Prototype before you pick
+
+```text
+/poteto-mode prototype a few options for the settings layout. put them behind a switcher and send me screenshots of each.
+```
+
+Compare working options before choosing a design. The [design guide](./04-design.md) describes the prototype workflow.
+
+## Turn a settled design into a plan
+
+```text
+/poteto-mode turn this design into a plan. small verifiable PRs, each with its own proof.
+```
+
+The plan names the steps, their evidence, and the playbook that will execute them.
+
 ## Get a second opinion on a design
 
 ```text
@@ -67,6 +83,22 @@ The qualifiers do real work. "don't change anything yet" keeps it read-only, and
 ```
 
 The result states the scope of the check, gives a counterexample if the property fails, and provides a project skill for later changes to the code.
+
+## Vet a number before you post it
+
+```text
+/benchmark-checklist vet this 40% speedup before it goes in the pr description
+```
+
+The result states whether the change is faster, slower, indistinguishable, or inconclusive, with evidence and limits.
+
+## Stop correcting the same mistake
+
+```text
+/correct agents keep adding new config flags without registering them in the schema
+```
+
+The skill looks for a change to the repo that prevents the mistake in later runs.
 
 ## Keep a run honest while you're away
 

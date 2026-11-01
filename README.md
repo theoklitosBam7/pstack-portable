@@ -54,7 +54,7 @@ the `0.14.8` sync ports the forge-neutral pr workflows: github cli (`gh`) by def
 
 the `0.15.9` sync adds `/correct`, `/benchmark-checklist`, and three principles: attack the premise, test behavior rather than implementation, and explain the number. It removes critique mode from `/how` and adds a configurable reasoning budget. It updates the architecture, review, performance, autopilot, and orchestration workflows. That sync used Grok 4.7 for code and Opus 5.5 for judgment, with Sol in the Cursor review panels. This fork maps model, wake, persona, and forge operations through the active harness. The Cursor plugin manifest and marketplace packaging remain excluded.
 
-the `0.15.36` port adds `/in-your-own-words`, `/sharpen`, the formal verification skill generators, `/ketchup`, and `/ketchup-video`. it updates orchestration, review and shipping workflows, the PR watcher, and the worktree audit. `/poteto-help` and `/statechart` are intentionally excluded. the file-by-file upstream parity review remains open.
+the `0.15.36` port adds `/in-your-own-words`, `/sharpen`, the formal verification skill generators, `/ketchup`, and `/ketchup-video`. it updates orchestration, review and shipping workflows, the PR watcher, and the worktree audit. `/poteto-help` and `/statechart` are intentionally excluded. a file-by-file upstream parity review checked the port against `0.15.36`.
 
 to port an upstream change:
 
