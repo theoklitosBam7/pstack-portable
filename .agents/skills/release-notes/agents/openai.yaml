@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release Notes"
+  short_description: "Write or update pstack release notes"
+  default_prompt: "Use $release-notes to write or update the pstack release notes."
