@@ -18,6 +18,10 @@ Model config: `~/.config/pstack/amp/models`.
 
 User-level instruction file: `~/.config/amp/AGENTS.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
+## Reasoning budget
+
+Built-in Task and Read Thread subagents use the parent thread's model and reasoning effort. A pstack budget cannot set their effort independently. Report that they inherit the thread setting; do not change the parent mode or plugin configuration for a spawn. For a custom plugin agent, use an effort control only if its live interface explicitly exposes one and confirms the value is supported.
+
 ## Default model roles
 
 Amp routes models itself through the Dial, `low` to `ultra`. Model choice per subagent is mostly automatic, so treat roles as hints: `judgment` work asks for the highest dial, `fast` work accepts the default. Plugin agents pin exact models when needed.

@@ -18,6 +18,10 @@ Model config: `~/.config/pstack/goose/models`.
 
 User-level instruction file: `~/.config/goose/.goosehints`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
+## Reasoning budget
+
+Use a per-call effort setting only if the active `delegate` tool schema explicitly exposes one and the selected model supports it. A model override alone does not set effort. Do not rewrite provider or session settings for a spawn. Otherwise report that the budget cannot be applied per call and that the existing provider or session setting controls effort.
+
 ## Default model roles
 
 `delegate` takes a `model` override. Without config: `judgment` = the strongest configured provider model, `fast` = `GOOSE_FAST_MODEL` or the fastest acceptable, `code` = the active model. `GOOSE_PLANNER_MODEL` covers plan-mode work.

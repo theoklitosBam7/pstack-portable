@@ -11,7 +11,7 @@ A harness session can load every pstack skill by its slash name through the Skil
 
 ## How to get to it (user POV)
 
-- Type a slash skill (`/how`, `/unslop`, `/poteto-mode`) in any session on claude code, codex, gemini cli, opencode, amp, pi, goose, droid, crush, or github copilot cli. The harness offers it because the install exposes it.
+- Type a slash skill (`/how`, `/unslop`, `/poteto-mode`) in any session on claude code, codex, opencode, amp, pi, goose, droid, crush, or github copilot cli. The harness offers it because the install exposes it.
 - Install globally with the official Skills CLI: `npx skills@latest add theoklitosBam7/pstack-portable -g -s '*' -y`. To verify an unmerged branch, pin a ref with a fragment: `npx skills@latest add theoklitosBam7/pstack-portable#<branch-name> -g -s '*'`. The CLI records the install in `~/.agents/.skill-lock.json`.
 - Install manually from a stable checkout with the README's absolute-path symlink command.
 - The README's install step creates the farm: `mkdir -p ~/.agents/skills && ln -sfn /path/to/pstack-portable/skills/* ~/.agents/skills/`.

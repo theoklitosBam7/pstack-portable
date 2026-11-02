@@ -175,10 +175,6 @@ def validate_model_configs(failures, warnings, notes):
             for entry in entries:
                 if not entry:
                     failures.append(f"config: {config}:{i} has an empty list entry")
-                elif entry not in ("auto", "inherit-parent") and "/" not in entry:
-                    warnings.append(
-                        f"config: {config}:{i} entry {entry!r} has no provider/ prefix; confirm it spawns in this harness"
-                    )
 
 
 def cmd_doctor():

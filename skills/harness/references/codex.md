@@ -18,6 +18,12 @@ Model config: `~/.config/pstack/codex/models`.
 
 User-level instruction file: `~/.codex/AGENTS.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
+## Reasoning budget
+
+Before each pstack subagent spawn, read the `# Budget:` comment in the Codex model config. Use it as the starting `reasoning_effort`: `unlimited` = `max`, `large` = `xhigh`, `medium` = `high`, and `small` = `medium`. The saved target is a starting point, not a spending limit. For the hardest or subtlest work, raise the effort one step; for judgment work, lower it one step; for routine work, lower it at least two steps. Use the order `low`, `medium`, `high`, `xhigh`, `max`. Keep verification on the starting effort. Preserve the selected role's model, including the parent model for `auto` and `inherit-parent`.
+
+Pass the resulting `reasoning_effort` in the spawn call when the current tool schema permits it. Respect higher-priority instructions and the model's supported effort levels. If the target is unsupported, use the highest supported level no higher than the target and report the fallback. If no supported level is at or below the target, omit the override and report that the budget could not be applied. If the config has no recognized budget, omit the effort override and use the harness default. If the tool does not accept an effort override, omit it and report that the budget could not be applied. Do not infer supported levels or attempt an override the current tool disallows.
+
 ## Default model roles
 
 Without config: resolve at setup time from what your account can spawn. `judgment` = the strongest reasoning-effort model, `code` = the strongest default-effort model, `fast` = the fastest acceptable model. Panels: distinct models where available, otherwise sequential passes on one model, stated in the reply.

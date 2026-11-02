@@ -18,6 +18,10 @@ Model config: `~/.config/pstack/droid/models`.
 
 User-level instruction file: `~/.factory/AGENTS.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
+## Reasoning budget
+
+Droid custom-agent definitions can contain `reasoningEffort`; the `Task` complexity selector routes work and is not a documented equivalent of a reasoning-effort value. Use a per-call effort field only if the live tool schema exposes it and the chosen value is supported. Do not rewrite shared droid definitions for a spawn. Otherwise report that the budget cannot be applied per call and that the existing agent configuration controls effort.
+
 ## Default model roles
 
 Subagents accept `complexity` routing and per-droid `model` frontmatter, `inherit` or an id or `custom:<id>`. Without config: `judgment` = the heaviest complexity tier on the strongest model, `code` = medium tier on the default model, `fast` = light tier. Panels fan out for real with distinct droid models.

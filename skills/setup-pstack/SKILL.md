@@ -38,7 +38,7 @@ For model IDs that use effort suffixes, apply the selected level to every real I
 
 Use only IDs from the detected model list. If the target ID is unavailable, choose a detected ID from the same family at the highest level that does not exceed the target. If no such ID exists, ask the user to choose from the detected list. Do not make up a model ID.
 
-Some harnesses use model IDs that do not show an effort suffix. Keep those IDs unchanged and tell the user that the selected budget cannot change their reasoning level. `inherit-parent` and `auto` also stay unchanged because they use the parent session model.
+For model IDs without effort suffixes, keep the IDs unchanged. Follow the adapter's budget instructions and tell the user which roles cannot apply the budget through the available per-call controls. `inherit-parent` and `auto` keep the parent session model.
 
 ### 5. Review and confirm the role table
 
@@ -50,7 +50,7 @@ Ask whether the user accepts the table or wants to change specific roles. Offer 
 
 Check that every real model ID is in the detected list. `inherit-parent` and `auto` are valid aliases. If an ID is unavailable, stop and ask the user to choose again.
 
-Create the active config's parent directory if needed. Write `~/.config/pstack/<harness>/models`, one line per role. Overwrite the file so reruns remove retired roles and stay idempotent. Record the selected budget in a comment. The comment is not a model role.
+Create the active config's parent directory if needed. Write `~/.config/pstack/<harness>/models`, one line per role. Overwrite the file so reruns remove retired roles and stay idempotent. Record the selected budget in a comment. The comment is not a model role; adapters may use it to set reasoning effort separately.
 
 ```text
 # pstack model configuration. Delete a role line to use its adapter default.
@@ -90,7 +90,7 @@ Before selecting models for pstack roles, read `~/.config/pstack/<harness>/model
 
 ### 7. Confirm the result
 
-Tell the user which config and instruction or mirror files you wrote. State the chosen budget and name any role whose model ID could not apply it.
+Tell the user which config and instruction or mirror files you wrote. State the chosen budget and name any role for which the adapter cannot apply it.
 
 ### 8. Offer a verification skill
 

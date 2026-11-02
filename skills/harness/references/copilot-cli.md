@@ -20,6 +20,10 @@ User-level instruction file: `~/.copilot/copilot-instructions.md`. If `COPILOT_H
 
 `COPILOT_HOME` also replaces `~/.copilot` in the agent, MCP, and transcript paths above. The pstack model config stays at `~/.config/pstack/copilot-cli/models`. Custom instructions must be enabled for the config-reading instruction to load.
 
+## Reasoning budget
+
+For each spawn, use a per-call reasoning-effort argument only if the live `task` schema exposes it, with a value confirmed supported for the selected model. The CLI also supports configured agent effort, but it can be overridden and can fall back to the session effort. Do not rewrite agent profiles or shared settings for a spawn. When no per-call control is exposed, report that pstack cannot apply the budget per call and that the agent or session setting controls effort.
+
 ## Default model roles
 
 Use `/model` to inspect available session models and `/subagents` to inspect subagent model choices. Confirm each role's model against the active tool schema or custom agent configuration before saving it. For `inherit-parent`, use the session model and check that the selected agent profile or `/subagents` setting does not supply a different model. Copilot `/model auto` is Copilot automatic session routing; it is not the pstack `auto` alias, which means inherit the session model.
