@@ -19,7 +19,7 @@ Preconditions:
 - doctor has run this session.
 
 - Full audit, expect `check: ok` with file and link counts: `python3 .agents/skills/verify-pstack/verify.py check`
-- Cold load, one skill per drive. Pick the target (for example `skills/principle-prove-it-works/SKILL.md`) and spawn one fresh read-only subagent through the active harness operation. On pi, use the installed subagent extension's `agent` plus `task` fields; do not assume a built-in agent name. Use this brief, with the path filled in:
+- Cold load, one skill per drive. Pick the target (for example `skills/principle-prove-it-works/SKILL.md`) and spawn one fresh read-only subagent through the active harness operation. Follow the active tool's instructions for reading its result; do not assume a built-in agent name. If a fresh subagent is unavailable, report the cold load as unreachable. Use this brief, with the path filled in:
 
 ```text
 Read the file at <ABSOLUTE PATH> completely before anything else. Using only that file, answer:

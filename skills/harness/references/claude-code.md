@@ -18,6 +18,10 @@ Model config: `~/.config/pstack/claude-code/models`.
 
 User-level instruction file: `~/.claude/CLAUDE.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
+## Reasoning budget
+
+For a non-fork subagent, pass `effort` when the live `Agent` schema exposes it and the selected model supports the value. This requires Claude Code 2.1.292 or later; `CLAUDE_CODE_EFFORT_LEVEL` takes precedence. Custom-agent frontmatter can set `effort`, but the current per-call schema must be checked; do not rewrite a shared agent definition for a spawn. If no applicable per-call control is exposed, report that the selected budget cannot be applied per call and that the existing agent or session setting controls effort.
+
 ## Default model roles
 
 Claude Code aliases: `sonnet`, `opus`, `haiku`, `fable`. Without config: `code` and `hardest` = the strongest instruction-following model you can spawn, `judgment` = the strongest thinking model, `fast` = `haiku`. Panels = the distinct families you can spawn, at most four. Run `/setup-pstack` to write real slugs.

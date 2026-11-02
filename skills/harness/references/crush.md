@@ -18,6 +18,10 @@ Model config: `~/.config/pstack/crush/models`.
 
 User-level instruction file: `~/.config/crush/CRUSH.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
+## Reasoning budget
+
+The `agent` tool accepts a prompt, not a per-call effort value. Crush can configure model reasoning effort, but the saved pstack budget does not change that configuration. Do not rewrite the shared model configuration for a spawn. Report that the budget cannot be applied per call and that the task agent's configured model controls effort.
+
 ## Default model roles
 
 Config defines per-agent `model` as `large` or `small` slots. Without config: `judgment` and `code` = large, `fast` = small. Multi-model means large plus small, so panels cap at two models. State collapsed panels in the reply.

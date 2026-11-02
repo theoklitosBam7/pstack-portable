@@ -87,12 +87,11 @@ class ModelConfigTests(unittest.TestCase):
         self.assertEqual(failures, [])
         self.assertEqual(warnings, [])
 
-    def test_model_without_provider_produces_path_specific_warning(self):
-        config = self.write_config("pi", "code: model-slug\n")
+    def test_model_without_provider_is_accepted(self):
+        self.write_config("codex", "code: model-slug\n")
         failures, warnings, _ = self.validate()
         self.assertEqual(failures, [])
-        self.assertEqual(len(warnings), 1)
-        self.assertIn(f"{config}:1", warnings[0])
+        self.assertEqual(warnings, [])
 
 
 class InstallTests(unittest.TestCase):

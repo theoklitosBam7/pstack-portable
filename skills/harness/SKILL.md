@@ -12,7 +12,7 @@ pstack skills are written against a small set of neutral operations. They do not
 Run this before the first pstack operation, then keep the answer for the session. Do not re-detect per skill.
 
 1. Environment variables first. `COPILOT_CLI=1` means GitHub Copilot CLI, adapter `copilot-cli`. `CLAUDECODE=1` means Claude Code. `OPENCODE=1` or `OPENCODE_PID` set means opencode. `AI_AGENT=pi` or `PI_CODING_AGENT=true` means pi. `CODEX_SANDBOX` set means Codex CLI, a weak signal because it only appears under sandboxing.
-2. Tool fingerprints next. `AskUserQuestion` plus an `Agent` tool means Claude Code. `request_user_input` plus `update_plan` means Codex CLI. `ask_user` plus `write_todos` means Gemini CLI. A `task` tool with `subagent_type` plus `todowrite` means opencode. `AskUser` plus `TaskOutput` means Factory Droid. `delegate` plus `load` means Goose. A read-only `agent` tool plus `crush_info` means Crush. Built-in specialists named `Review`, `Search`, or `Oracle` with no markdown persona support means Amp. `AskQuestion` plus a `Task` tool means Cursor. A `task` tool plus `read_agent`, `list_agents`, and `write_agent` means GitHub Copilot CLI, adapter `copilot-cli`.
+2. Tool fingerprints next. `AskUserQuestion` plus an `Agent` tool means Claude Code. `request_user_input` plus `update_plan` means Codex CLI. A `task` tool with `subagent_type` plus `todowrite` means opencode. `AskUser` plus `TaskOutput` means Factory Droid. `delegate` plus `load` means Goose. A read-only `agent` tool plus `crush_info` means Crush. Built-in specialists named `Review`, `Search`, or `Oracle` with no markdown persona support means Amp. `AskQuestion` plus a `Task` tool means Cursor. A `task` tool plus `read_agent`, `list_agents`, and `write_agent` means GitHub Copilot CLI, adapter `copilot-cli`.
 3. Still unknown after both checks: ask the user once which harness this is, then remember it.
 
 After detection, read `references/<harness>.md` from this skill and apply it for the rest of the session.
@@ -21,7 +21,7 @@ After detection, read `references/<harness>.md` from this skill and apply it for
 
 - **ask-user(question, options).** One structured question, two to five options, free-form always allowed. Use it where a pstack skill says to ask with options.
 - **todolist(items).** A tracked task list the user can see. Update it as steps complete.
-- **spawn-subagent(brief, model-role, mode).** One subagent with a standalone brief. Mode is `foreground`, `background`, or `readonly`. Fan-outs spawn all subagents in one message. The model-role names a line from the model config below, or `session` for the current model. Briefs stand alone and include goal, scope, verification, and report format.
+- **spawn-subagent(brief, model-role, mode).** One subagent with a standalone brief. Mode is `foreground`, `background`, or `readonly`. Fan-outs spawn all subagents in one message. The model-role names a line from the model config below, or `session` for the current model. Apply the active adapter's budget instructions to each spawn. Briefs stand alone and include goal, scope, verification, and report format.
 - **persona(name).** pstack ships two personas, `poteto-agent` and `comment-sicko`, as markdown files in the plugin's `agents/` directory. When the harness supports custom subagent personas, install or reference them there. Otherwise paste the persona file's full text at the top of the subagent brief.
 - **discover-mcps.** List the MCP servers configured in this harness, so a skill can pick evidence sources.
 - **find-transcripts.** Locate this workspace's session transcripts on disk.
@@ -40,6 +40,12 @@ Read only the active harness's config and mirror. Ignore the old shared file at 
 A role that resolves to nothing runs on the session model. The value `inherit-parent` or `auto` also means the session model. When a multi-model panel collapses to one model because the harness cannot spawn per-subagent models, say so in the reply. The panel still runs, sequentially if it must.
 
 Roles in use: `code`, `fast`, `judgment`, `hardest`, plus the panel roles `how explorer`, `how explainer`, `why investigators`, `why synthesizer`, `reflect tooling`, `reflect judgment`, `arena runners`, `arena cross-judge pool`, `swarm workers`, `architect runners`, `interrogate reviewers`. Legacy config lines naming playbooks, like `bug-fix` or `feature, refactoring`, map onto the matching role as the adapter notes.
+
+## Reasoning budgets
+
+Read the active config's `# Budget:` comment before spawning a pstack subagent. The starting effort is `unlimited` = `max`, `large` = `xhigh`, `medium` = `high`, and `small` = `medium`. This is a starting point, not a spending limit. For the hardest or subtlest work raise effort one step; for judgment work lower it one step; for routine work lower it at least two steps. Keep verification at the starting effort. The order is `low`, `medium`, `high`, `xhigh`, `max`; stop at either end. Preserve the role's model family and panel membership.
+
+Use the active adapter's documented mechanism and the live tool schema. Apply only supported settings and values. If the target is unavailable, use the highest confirmed supported level at or below it. If no such level is confirmed, leave the existing setting in effect and report that the budget could not be applied. When the budget is missing or unrecognized, leave the harness default in effect. Never change a shared agent profile or parent session setting to simulate a per-call override. Report when a role inherits an existing effort instead of the selected budget.
 
 ## Fallback policy
 

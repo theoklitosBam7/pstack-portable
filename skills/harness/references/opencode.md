@@ -18,6 +18,10 @@ Model config: `~/.config/pstack/opencode/models`.
 
 User-level instruction file: `~/.config/opencode/AGENTS.md`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
+## Reasoning budget
+
+OpenCode supports model variants in agent configuration, but the `task` interface and variant syntax vary by version. Apply the budget only if the active subagent call explicitly exposes a model variant or effort control and the chosen value is confirmed for that model. Do not rewrite shared agent or provider configuration for a spawn. Otherwise report that the budget cannot be applied per call and that the existing agent configuration controls the variant.
+
 ## Default model roles
 
 Agents take `model` as `provider/model-id` in config. Without config: `judgment` = the strongest model on the strongest provider, `fast` = a flash-class model, `code` = the strongest default tier. Different agents in one session may use different models, so panels fan out for real.

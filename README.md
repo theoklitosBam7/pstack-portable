@@ -16,7 +16,7 @@ fork it. improve it. make it yours. PRs are welcome!
 
 ## install
 
-the skills are harness agnostic and run on claude code, codex, gemini cli, opencode, amp, pi, goose, droid, crush, and [github copilot cli](./skills/harness/references/copilot-cli.md).
+the skills are harness agnostic and run on claude code, codex, opencode, amp, pi, goose, droid, crush, and [github copilot cli](./skills/harness/references/copilot-cli.md).
 
 the official skills cli is the quickest way:
 

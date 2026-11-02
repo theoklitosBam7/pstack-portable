@@ -41,7 +41,7 @@ python3 .agents/skills/verify-pstack/verify.py check
 
 ### Live: cold load
 
-Spawn one fresh subagent per skill under test. On pi, use the installed `subagent` extension with its `agent` and `task` fields. On other harnesses, use the spawn-subagent operation in the `harness` skill. Do not assume a built-in agent name. The brief template, with the absolute path filled in:
+Spawn one fresh subagent per skill under test using the `harness` skill's spawn-subagent operation. Follow the active tool's instructions for reading its result. Do not assume a built-in agent name. If a fresh subagent is unavailable, report the cold load as unreachable; a main-thread fallback is not a cold-load proof. The brief template, with the absolute path filled in:
 
 ```text
 Read the file at <ABSOLUTE PATH> completely before anything else. Using only that file, answer:
