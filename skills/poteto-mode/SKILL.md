@@ -16,7 +16,6 @@ The Principles section below grounds every trigger. In your reply, name each pri
 
 Remaining triggers:
 
-- Nontrivial change, architecture decision, or "are we sure?" → the **how** skill.
 - Before asking the user which approach to take or what a feature should do, classify the question. If a run can answer it, use the Prototype playbook (`playbooks/prototype.md`) and let the result decide. For a read-only Investigation with a cited answer, gather evidence instead of building a sketch. Ask the user only about a product or preference choice that no experiment can settle. Under a full-autonomy grant, make a covered choice and report it without waiting. For a choice only the user can make, choose a default, explain it, and state what the user can change. Always pause for gates the user named and items in the Always-pause list.
 - Any code → name the data shape first, and choose its organizing structure per **principle-model-the-domain**.
 - Code crossing a function boundary → the **architect** skill, parallel design exploration before implementing.
@@ -90,7 +89,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Subagents
 
-**Use the `poteto-agent` persona for subagents spawned inside playbook steps**, per the **harness** skill. `/poteto-mode` and `poteto-agent` use the same persona. Routed skills such as `how`, `why`, `interrogate`, `reflect`, and `swarm` choose their own model roles. Follow those roles.
+**Use the `poteto-agent` persona for subagents spawned inside playbook steps**, per the **harness** skill. `/poteto-mode` and `poteto-agent` use the same persona. Routed skills such as `interrogate`, `reflect`, and `swarm` choose their own model roles. Follow those roles.
 
 **Set each subagent up for its task.** Use background mode when the harness supports it. Use agent mode when readonly mode removes required MCP access. Pass file paths instead of large inlined files. Resolve model roles through `/setup-pstack` and the **harness** skill. Send code that needs judgment to the `judgment` role. Send a precise mechanical task to the `code` role. Send small mechanical edits to the `fast` role. Use `hardest` for the hardest work. A configured role overrides its adapter default. `inherit-parent` and `auto` use the parent session model. Choose the reasoning level and speed for the task when the harness supports those settings.
 
