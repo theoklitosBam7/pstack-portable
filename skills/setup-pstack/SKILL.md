@@ -95,10 +95,10 @@ alwaysApply: true
 ---
 ```
 
-On other harnesses, use the exact user-level instruction file named in the adapter's Config section. Preserve its existing instructions. Add this line once, or update the existing pstack config instruction, including an old shared-path instruction. Replace `<harness>` with the active adapter name before writing the line:
+On other harnesses, use the exact user-level instruction file named in the adapter's Config section. Preserve its existing instructions. Add a `## Agent delegation` section if the file has no such section. In that section, write this bullet once, replacing any existing pstack config line, including an old shared-path line. Replace `<harness>` with the active adapter name before writing:
 
 ```text
-Before selecting models for pstack roles, read `~/.config/pstack/<harness>/models` if it exists.
+- Apply pstack model routing only when the user or an applicable skill explicitly assigns a pstack role. Before selecting models for those roles, read `~/.config/pstack/<harness>/models` if it exists.
 ```
 
 ### 7. Confirm the result
