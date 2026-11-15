@@ -9,6 +9,8 @@
 - `config-isolation`: each adapter names its own config path; the checker validates every existing supported harness config and ignores the old shared file.
 - `config-format`: every non-comment line parses as `role: value`.
 - `config-roles`: role names come from the table in `skills/setup-pstack/SKILL.md`. The checker also accepts legacy aliases (`bug-fix`, `feature`, `refactoring`, `perf-issue`, `hillclimb`) that the table does not list.
+- `retired-roles`: the checker warns on the retired `how` and `why` roles and `how critics`, and still fails an unknown role.
+- `cursor-migration`: `/setup-pstack` replaces exact old Cursor default values and keeps every other value.
 - `config-resolve`: panel values may be comma-separated lists; `auto` and `inherit-parent` entries are always legal.
 
 ## How to get to it (user POV)
@@ -23,11 +25,13 @@ Preconditions:
 - doctor has run this session (its config section is the format and role audit).
 
 - Format and role audit, expect `doctor: ok` or `FAIL` lines with line numbers: `python3 .agents/skills/verify-pstack/verify.py doctor`
-- Role source of truth, expect each configured role name to appear in the setup skill: `rg -n "how explorer|arena runners|interrogate reviewers" skills/setup-pstack/SKILL.md`
+- Role source of truth, expect each configured role name to appear in the setup skill: `rg -n "arena runners|interrogate reviewers|swarm workers" skills/setup-pstack/SKILL.md`
 - Live resolution, use the active harness's supported model inspection or real subagent invocation, and save the output to evidence. Confirm that `auto` and `inherit-parent` use the current session model and that configured real model IDs are accepted.
+- Cursor migration, use a temporary HOME so the real config stays untouched. Create `~/.config/pstack/cursor/models` under it with the old defaults, retired role lines, and one customized value, then run `/setup-pstack` there. Confirm it reports each replaced value, drops the retired roles, keeps the customized value, and applies the selected absolute budget.
 
 ## Gotchas
 
-- Do not write the config during a verification run. Changing routing mid-run invalidates earlier evidence.
+- Do not write the config during a verification run. Changing routing mid-run invalidates earlier evidence. For the Cursor migration drive, use a temporary HOME so the real config stays untouched.
+- The migration is Cursor-only. Other harness configs keep every model value and only lose the retired roles on the next setup run.
 - Panel values with `auto` still count fan-out per entry: `auto, auto` spawns two subagents on the same model.
 - The checker cannot confirm a model ID actually spawns. Confirm ID reality with the active harness's model listing or a real subagent invocation.

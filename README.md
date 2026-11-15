@@ -48,13 +48,15 @@ run [`/setup-pstack`](./skills/setup-pstack/SKILL.md) once inside each agent har
 
 ## upstream sync
 
-forked from [`cursor/plugins`](https://github.com/cursor/plugins) at commit `bdf7aa3` (pstack `0.14.3`), tagged `upstream-pstack-0.14.3` here. the first sync covered upstream commit `93b00b8` (pstack `0.14.8`), tagged `upstream-pstack-0.14.8` here at commit `c1a9bcb`. the next sync covered upstream commit `e43c7ee` (pstack `0.15.9`). the current port targets upstream commit `ae5650febf4320793844c12c4adaa937f417f8da` (pstack `0.15.36`). the remote `upstream` points at the marketplace repo. the portable release version stays independent of the upstream one.
+forked from [`cursor/plugins`](https://github.com/cursor/plugins) at commit `bdf7aa3` (pstack `0.14.3`), tagged `upstream-pstack-0.14.3` here. the first sync covered upstream commit `93b00b8` (pstack `0.14.8`), tagged `upstream-pstack-0.14.8` here at commit `c1a9bcb`. the next sync covered upstream commit `e43c7ee` (pstack `0.15.9`). the next covered `ae5650f` (`0.15.36`). the current port targets upstream commit `bf0c7cd` (pstack `0.15.42`). the remote `upstream` points at the marketplace repo. the portable release version stays independent of the upstream one.
 
 the `0.14.8` sync ports the forge-neutral pr workflows: github cli (`gh`) by default, the optional origin cli when its `origin` executable can resolve the repository (a separate cli, not the git remote named `origin`), base-branch stacks instead of graphite, and bottom-up merging. it also ports the regression lane and dual-sided perf gates, the fable 5.1 model defaults (ported as role intent; the concrete cursor slugs live in the cursor adapter), the typescript schema-over-guards guidance, and `disable-model-invocation` on `how` and `why`. intentional exclusions: the `make-bot-ui` skill, which needs cursor routines services this port does not assume, the marketplace logo and plugin manifest, the `paths` activation field, which no supported harness honors, and `disable-model-invocation` on `unslop` and `typescript-best-practices`, which stay automatic.
 
 the `0.15.9` sync adds `/correct`, `/benchmark-checklist`, and three principles: attack the premise, test behavior rather than implementation, and explain the number. It removes critique mode from `/how` and adds a configurable reasoning budget. It updates the architecture, review, performance, autopilot, and orchestration workflows. That sync used Grok 4.7 for code and Opus 5.5 for judgment, with Sol in the Cursor review panels. This fork maps model, wake, persona, and forge operations through the active harness. The Cursor plugin manifest and marketplace packaging remain excluded.
 
 the `0.15.36` port adds `/in-your-own-words`, `/sharpen`, the formal verification skill generators, `/ketchup`, and `/ketchup-video`. it updates orchestration, review and shipping workflows, the PR watcher, and the worktree audit. `/poteto-help` and `/statechart` are intentionally excluded. a file-by-file upstream parity review checked the port against `0.15.36`.
+
+the `0.15.42` sync cuts `/why` and `/how` to one short file each. `/why` now answers from the record, reading the commits and PR discussions behind the target and each later change, instead of fanning out to MCP investigators. `/how` starts one read-only subagent that explores and explains in one pass. `/poteto-mode` and the build playbooks trace code directly instead of routing through `/how`, and `/sharpen` asks the rewritten prompt to prototype any choice an experiment can settle. it moves the Cursor defaults to Fable 5.2, Opus 5.5, and Gemini 4 Carbon, and adds a Cursor-only migration that replaces the exact old defaults and keeps every other value. other harnesses keep their defaults. this fork keeps its absolute reasoning budget rather than upstream's per-role step delta, so the Cursor per-role effort applies only before `/setup-pstack` writes a config. `/poteto-help` and `/statechart` remain excluded. the retired `how` and `why` role lines now warn instead of failing the verifier.
 
 to port an upstream change:
 
@@ -76,7 +78,7 @@ two steps:
 
 new here? the [pstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
 
-that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by model role: code work uses the code role, prose and judgment use the judgment role, and small mechanical edits use the fast role. on cursor, code defaults to grok 4.7 and judgment defaults to opus 5.5. review panels use opus 5.5 and grok 4.7. other harnesses resolve the same roles through their adapter defaults. [`/setup-pstack`](./skills/setup-pstack/SKILL.md) detects your models and overrides any of it.
+that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by model role: code work uses the code role, prose and judgment use the judgment role, and small mechanical edits use the fast role. on cursor, code, prose, and judgment default to opus 5.5, and the hardest work defaults to fable 5.2. review panels use fable 5.2, opus 5.5, and gemini 4 carbon. other harnesses resolve the same roles through their adapter defaults. [`/setup-pstack`](./skills/setup-pstack/SKILL.md) detects your models and overrides any of it.
 
 ## usage
 
@@ -142,7 +144,7 @@ on cursor, pick [`/poteto-mode`](./skills/poteto-mode/SKILL.md) from the `/` men
 
 ## skills
 
-[`/poteto-mode`](./skills/poteto-mode/SKILL.md) runs most of these for you when a step needs them (`how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `benchmark-checklist`, `unslop`, `no-comments`, `technical-writing`, `pstack-tdd`, and the principles). the table below is for when you want one directly:
+[`/poteto-mode`](./skills/poteto-mode/SKILL.md) runs most of these for you when a step needs them (`why`, `architect`, `arena`, `swarm`, `interrogate`, `benchmark-checklist`, `unslop`, `no-comments`, `technical-writing`, `pstack-tdd`, and the principles). the table below is for when you want one directly:
 
 ```
 /how do we cancel runs? do we have an n+1 when we look up every run to cancel?
@@ -160,8 +162,8 @@ on cursor, pick [`/poteto-mode`](./skills/poteto-mode/SKILL.md) from the `/` men
 | [`/poteto-mode`](./skills/poteto-mode/SKILL.md) | default entry point for any non-trivial task. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
 | [`/in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to restate your goals and the problem. |
-| [`/sharpen`](./skills/sharpen/SKILL.md) | you want a deeper prompt that considers professional methods and an outside check. it returns a rewrite without doing the task. |
-| [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
+| [`/sharpen`](./skills/sharpen/SKILL.md) | you want a deeper prompt that considers professional methods and an outside check. the rewrite asks the agent to prototype any choice an experiment can settle and leaves product and preference choices to you. it returns the rewrite without doing the task. |
+| [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. answers from the record: the commits and PR discussions that introduced it and each later change, plus other sources when that trail is thin. cites what the authors wrote, marks its own inferences, and says what the record does not answer. |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
 | [`/blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
 | [`/benchmark-checklist`](./skills/benchmark-checklist/SKILL.md) | you ran a benchmark or measured a speedup or regression and need to check what the number proves. |

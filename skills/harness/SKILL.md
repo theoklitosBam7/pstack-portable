@@ -39,7 +39,7 @@ Read only the active harness's config and mirror. Ignore the old shared file at 
 
 A role that resolves to nothing runs on the session model. The value `inherit-parent` or `auto` also means the session model. When a multi-model panel collapses to one model because the harness cannot spawn per-subagent models, say so in the reply. The panel still runs, sequentially if it must.
 
-Roles in use: `code`, `fast`, `judgment`, `hardest`, plus the panel roles `how explorer`, `how explainer`, `why investigators`, `why synthesizer`, `reflect tooling`, `reflect judgment`, `arena runners`, `arena cross-judge pool`, `swarm workers`, `architect runners`, `interrogate reviewers`. Legacy config lines naming playbooks, like `bug-fix` or `feature, refactoring`, map onto the matching role as the adapter notes.
+Roles in use: `code`, `fast`, `judgment`, `hardest`, plus the panel roles `reflect tooling`, `reflect judgment`, `arena runners`, `arena cross-judge pool`, `swarm workers`, `architect runners`, `interrogate reviewers`. Legacy config lines naming playbooks, like `bug-fix` or `feature, refactoring`, map onto the matching role as the adapter notes.
 
 ## Reasoning budgets
 

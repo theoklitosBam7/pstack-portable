@@ -16,7 +16,7 @@
 
 Model config: `~/.config/pstack/goose/models`.
 
-User-level instruction file: `~/.config/goose/.goosehints`. Add the exact line from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
+User-level instruction file: `~/.config/goose/.goosehints`. Add the exact instruction from [setup-pstack, step 6](../../setup-pstack/SKILL.md#6-write-the-config) to this file so later sessions read the config before selecting models for pstack roles.
 
 ## Reasoning budget
 

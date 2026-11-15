@@ -25,13 +25,17 @@ PSTACK_SOURCE = "theoklitosBam7/pstack-portable"
 
 KNOWN_ROLES = {
     "code", "fast", "judgment", "hardest",
-    "how explorer", "how explainer",
-    "why investigators", "why synthesizer",
     "reflect tooling", "reflect judgment",
     "arena runners", "arena cross-judge pool",
     "swarm workers", "architect runners", "interrogate reviewers",
     # legacy names that map onto code or hardest
     "bug-fix", "feature", "refactoring", "perf-issue", "hillclimb",
+}
+
+RETIRED_ROLES = {
+    "how explorer", "how explainer",
+    "why investigators", "why synthesizer",
+    "how critics",
 }
 
 ROLE_LINE = re.compile(r"^([A-Za-z][A-Za-z -]*?):\s*(.+?)\s*$")
@@ -169,7 +173,9 @@ def validate_model_configs(failures, warnings, notes):
                 failures.append(f"config: {config}:{i} is not 'role: value': {stripped!r}")
                 continue
             role, value = match.group(1).strip(), match.group(2).strip()
-            if role not in KNOWN_ROLES:
+            if role in RETIRED_ROLES:
+                warnings.append(f"config: {config}:{i} names retired role {role!r}")
+            elif role not in KNOWN_ROLES:
                 failures.append(f"config: {config}:{i} names unknown role {role!r}")
             entries = [entry.strip() for entry in value.split(",")]
             for entry in entries:
