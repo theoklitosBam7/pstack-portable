@@ -93,6 +93,32 @@ class ModelConfigTests(unittest.TestCase):
         self.assertEqual(failures, [])
         self.assertEqual(warnings, [])
 
+    def test_retired_roles_warn_instead_of_failing(self):
+        self.write_config(
+            "cursor",
+            "how explorer: auto\nhow explainer: auto\n"
+            "why investigators: auto\nwhy synthesizer: auto\nhow critics: auto\n",
+        )
+        failures, warnings, _ = self.validate()
+        self.assertEqual(failures, [])
+        self.assertEqual(len(warnings), 5)
+        for role in ("how explorer", "how explainer", "why investigators",
+                     "why synthesizer", "how critics"):
+            self.assertTrue(any(role in warning for warning in warnings))
+
+    def test_cursor_adapter_lists_new_defaults_without_retired_roles(self):
+        adapter = (verify.REPO / "skills" / "harness" / "references" / "cursor.md").read_text()
+        for model in ("claude-opus-5-5-xhigh", "claude-fable-5-2-max",
+                      "claude-opus-5-5-high-fast", "claude-fable-5-2-high",
+                      "gemini-4-carbon-high"):
+            self.assertIn(model, adapter)
+        for role in verify.RETIRED_ROLES:
+            self.assertNotIn(f"`{role}`", adapter)
+
+    def test_why_and_how_reference_trees_are_gone(self):
+        for name in ("why", "how"):
+            self.assertFalse((verify.REPO / "skills" / name / "references").exists())
+
 
 class InstallTests(unittest.TestCase):
     def setUp(self):
