@@ -21,11 +21,28 @@ Use the active harness to list models that subagents can use. Check the adapter 
 
 Read `~/.config/pstack/<harness>/models` if it exists. Keep its role values and the recorded budget as the current choices. Otherwise use the role defaults in the **harness** skill and the active adapter. Ignore the old shared file at `~/.config/pstack/models`; leave it and other harnesses' configs untouched.
 
-The `how critics` role is no longer used. When the current config has that line, report it as retired and omit it from the new config.
+The `how critics` role and the four `how` and `why` roles are no longer used. When the current config has those lines, report them as retired and omit them from the new config.
+
+#### Cursor migration
+
+On the Cursor adapter only, replace exact old default values before the budget step. Match whole values, never a prefix or a pattern. Keep every other value, including `judgment`, `reflect judgment`, aliases, and any customized model. Report each replaced value before the budget step. Do not migrate any other harness.
+
+| Role | Old value | New value |
+|---|---|---|
+| `code` | `grok-4.7-xhigh-fast` | `claude-opus-5-5-xhigh` |
+| `fast` | `grok-4.7-xhigh-fast` | `claude-opus-5-5-high-fast` |
+| `hardest` | `claude-opus-5-5-xhigh` | `claude-fable-5-2-max` |
+| `reflect tooling` | `grok-4.7-xhigh-fast` | `claude-opus-5-5-high-fast` |
+| `swarm workers` | `grok-4.7-xhigh-fast` | `claude-opus-5-5-high-fast` |
+
+Panel rules:
+
+- If a panel has exactly `claude-opus-5-5-xhigh, grok-4.7-xhigh-fast` in either order, replace it with `claude-fable-5-2-high, claude-opus-5-5-high-fast, gemini-4-carbon-high`.
+- In any other panel, replace each exact `grok-4.7-xhigh-fast` entry with `claude-opus-5-5-high-fast`. Keep the order and remove duplicates.
 
 ### 4. Choose a reasoning budget
 
-Use the harness's ask-user operation. Offer these choices and include the current budget when the config records one. On Cursor, when there is no config, say that `large` matches the adapter defaults:
+Use the harness's ask-user operation. Offer these choices and include the current budget when the config records one. On Cursor, when there is no config, say that `large` sets `xhigh` reasoning, while the adapter defaults are per-role starting points:
 
 - `unlimited` for `max` reasoning, or the highest available level below it.
 - `large` for `xhigh` reasoning.
@@ -44,7 +61,7 @@ For model IDs without effort suffixes, keep the IDs unchanged. Follow the adapte
 
 Show every role and its model. Mark any ID that is not in the detected list as needing a choice. State which roles could not use the selected budget, and list any retired config lines that you will omit.
 
-Ask whether the user accepts the table or wants to change specific roles. Offer detected models, `inherit-parent`, and `auto`. Both aliases mean that the role uses the parent session model. Use the harness's ask-user operation. For panels (`arena runners`, `architect runners`, and `interrogate reviewers`), the value is a list. One subagent runs per entry, so the list length sets the panel size. `arena cross-judge pool` is an ordered preference list. Arena runs one judge and tries only models from a family other than the parent's, in list order. `inherit-parent` and `auto` never judge. `swarm workers` is the default for workers unless a race or comparison assigns a model to each arm.
+Ask whether the user accepts the table or wants to change specific roles. Offer detected models, `inherit-parent`, and `auto`. Both aliases mean that the role uses the parent session model. Use the harness's ask-user operation. For panels (`arena runners`, `architect runners`, and `interrogate reviewers`), the value is a list. One subagent runs per entry, so the list length sets the panel size. `arena cross-judge pool` is an ordered preference list. Arena runs one judge and tries only models from a vendor other than the parent's, in list order. Fable and the other Claude models are one vendor. `inherit-parent` and `auto` never judge. `swarm workers` is the default for workers unless a race or comparison assigns a model to each arm.
 
 ### 6. Write the config
 
@@ -60,10 +77,6 @@ code: <strongest instruction-following model>
 fast: <fastest acceptable model>
 judgment: <strongest reasoning model>
 hardest: <strongest model for the hardest tasks>
-how explorer: <fast model>
-how explainer: <reasoning model>
-why investigators: <fast model>
-why synthesizer: <reasoning model>
 reflect tooling: <code model>
 reflect judgment: <reasoning model>
 arena runners: <list of distinct-family models>

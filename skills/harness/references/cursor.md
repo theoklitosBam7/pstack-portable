@@ -24,7 +24,22 @@ Use the selected role's effort-suffixed model ID as the starting level. Adjust i
 
 ## Default model roles
 
-Configured lines win. Without config, `code` and `fast` use `grok-4.7-xhigh-fast`; `judgment` and `hardest` use `claude-opus-5-5-xhigh`. `arena runners`, `arena cross-judge pool`, `architect runners`, and `interrogate reviewers` use `claude-opus-5-5-xhigh` and `grok-4.7-xhigh-fast`. `how explorer`, `why investigators`, `swarm workers`, and `reflect tooling` use `grok-4.7-xhigh-fast`. `how explainer`, `why synthesizer`, and `reflect judgment` use `claude-opus-5-5-xhigh`. Playbook lines map: `feature`, `refactoring`, `bug-fix`, `perf-issue`, and `hillclimb` use the `code` role; `hardest tasks` use the `hardest` role.
+Configured lines win. Without config, `code` and `judgment` use `claude-opus-5-5-xhigh`; `hardest` uses `claude-fable-5-2-max`. `fast`, `swarm workers`, and `reflect tooling` use `claude-opus-5-5-high-fast`. `reflect judgment` uses `claude-opus-5-5-xhigh`. `arena runners`, `arena cross-judge pool`, `architect runners`, and `interrogate reviewers` use `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, and `gemini-4-carbon-high`. Playbook lines map: `feature`, `refactoring`, `bug-fix`, `perf-issue`, and `hillclimb` use the `code` role; `hardest tasks` use the `hardest` role.
+
+The fork's absolute reasoning budget sets the effort once a config exists. The per-role effort in these defaults applies only before setup writes a config or when a role has no line.
+
+### Previous defaults
+
+Migration data for `/setup-pstack`, not current defaults.
+
+| Role | Old value |
+|---|---|
+| `code` | `grok-4.7-xhigh-fast` |
+| `fast` | `grok-4.7-xhigh-fast` |
+| `hardest` | `claude-opus-5-5-xhigh` |
+| `reflect tooling` | `grok-4.7-xhigh-fast` |
+| `swarm workers` | `grok-4.7-xhigh-fast` |
+| panel roles | `claude-opus-5-5-xhigh, grok-4.7-xhigh-fast` |
 
 ## Notes
 
